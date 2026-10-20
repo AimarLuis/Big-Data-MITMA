@@ -57,7 +57,7 @@ Input [2]: [fecha#833, tipo_dia#835]
 
 (7) BroadcastExchange
 Input [2]: [fecha#838, tipo_dia#835]
-Arguments: HashedRelationBroadcastMode(List(input[0, date, true]),false), [plan_id=7694]
+Arguments: HashedRelationBroadcastMode(List(input[0, date, true]),false), [plan_id=7752]
 
 (8) BroadcastHashJoin
 Left keys [1]: [fecha#815]
@@ -82,7 +82,7 @@ Condition : isnotnull(cod_provincia#856)
 
 (12) BroadcastExchange
 Input [3]: [cod_provincia#856, provincia#857, ccaa#858]
-Arguments: HashedRelationBroadcastMode(List(input[0, string, false]),false), [plan_id=7698]
+Arguments: HashedRelationBroadcastMode(List(input[0, string, false]),false), [plan_id=7756]
 
 (13) BroadcastHashJoin
 Left keys [1]: [cod_prov_origen#813]
@@ -103,7 +103,7 @@ Results [5]: [provincia#857, ccaa#858, fecha#815, tipo_dia#835, sum#2973]
 
 (16) Exchange
 Input [5]: [provincia#857, ccaa#858, fecha#815, tipo_dia#835, sum#2973]
-Arguments: hashpartitioning(provincia#857, ccaa#858, fecha#815, tipo_dia#835, 32), ENSURE_REQUIREMENTS, [plan_id=7703]
+Arguments: hashpartitioning(provincia#857, ccaa#858, fecha#815, tipo_dia#835, 32), ENSURE_REQUIREMENTS, [plan_id=7761]
 
 (17) HashAggregate
 Input [5]: [provincia#857, ccaa#858, fecha#815, tipo_dia#835, sum#2973]
@@ -121,7 +121,7 @@ Results [8]: [provincia#857, ccaa#858, sum#2966, count#2967L, sum#2968, count#29
 
 (19) Exchange
 Input [8]: [provincia#857, ccaa#858, sum#2966, count#2967L, sum#2968, count#2969L, sum#2970, count#2971L]
-Arguments: hashpartitioning(provincia#857, ccaa#858, 32), ENSURE_REQUIREMENTS, [plan_id=7707]
+Arguments: hashpartitioning(provincia#857, ccaa#858, 32), ENSURE_REQUIREMENTS, [plan_id=7765]
 
 (20) HashAggregate
 Input [8]: [provincia#857, ccaa#858, sum#2966, count#2967L, sum#2968, count#2969L, sum#2970, count#2971L]
@@ -136,7 +136,7 @@ Input [5]: [provincia#857, ccaa#858, media_laborable#2947, media_fin_de_semana#2
 
 (22) Exchange
 Input [7]: [provincia#857, ccaa#858, media_laborable#2947, media_fin_de_semana#2948, festivo_1_nov#2949, finde_vs_laborable_pct#2958, festivo_vs_laborable_pct#2959]
-Arguments: rangepartitioning(media_laborable#2947 DESC NULLS LAST, 32), ENSURE_REQUIREMENTS, [plan_id=7711]
+Arguments: rangepartitioning(media_laborable#2947 DESC NULLS LAST, 32), ENSURE_REQUIREMENTS, [plan_id=7769]
 
 (23) Sort
 Input [7]: [provincia#857, ccaa#858, media_laborable#2947, media_fin_de_semana#2948, festivo_1_nov#2949, finde_vs_laborable_pct#2958, festivo_vs_laborable_pct#2959]

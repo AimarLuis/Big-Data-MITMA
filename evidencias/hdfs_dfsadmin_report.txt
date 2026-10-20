@@ -1,10 +1,10 @@
 Configured Capacity: 2162202353664 (1.97 TB)
-Present Capacity: 2006527925862 (1.82 TB)
-DFS Remaining: 1983261343744 (1.80 TB)
-DFS Used: 23266582118 (21.67 GB)
+Present Capacity: 2005624832628 (1.82 TB)
+DFS Remaining: 1982365687808 (1.80 TB)
+DFS Used: 23259144820 (21.66 GB)
 DFS Used%: 1.16%
 Replicated Blocks:
-	Under replicated blocks: 9
+	Under replicated blocks: 7
 	Blocks with corrupt replicas: 0
 	Missing blocks: 0
 	Missing blocks (with replication factor 1): 0
@@ -20,43 +20,43 @@ Erasure Coded Block Groups:
 -------------------------------------------------
 Live datanodes (2):
 
-Name: 172.18.0.4:9866 (datanode2.bigdatamitmav0_default)
-Hostname: 82aef882bf1d
+Name: 172.19.0.4:9866 (datanode2.big-data-mitma_default)
+Hostname: 213be4e98d8e
 Decommission Status : Normal
 Configured Capacity: 1081101176832 (1006.85 GB)
-DFS Used: 11633320708 (10.83 GB)
-Non DFS Used: 22844828924 (21.28 GB)
-DFS Remaining: 991630671872 (923.53 GB)
+DFS Used: 11629556026 (10.83 GB)
+Non DFS Used: 23296421574 (21.70 GB)
+DFS Remaining: 991182843904 (923.11 GB)
 DFS Used%: 1.08%
-DFS Remaining%: 91.72%
+DFS Remaining%: 91.68%
 Configured Cache Capacity: 0 (0 B)
 Cache Used: 0 (0 B)
 Cache Remaining: 0 (0 B)
 Cache Used%: 100.00%
 Cache Remaining%: 0.00%
 Xceivers: 1
-Last contact: Tue Oct 20 14:23:37 UTC 2026
-Last Block Report: Tue Oct 20 13:31:23 UTC 2026
-Num of Blocks: 1738
+Last contact: Tue Oct 20 16:51:41 UTC 2026
+Last Block Report: Tue Oct 20 15:58:47 UTC 2026
+Num of Blocks: 1732
 
 
-Name: 172.18.0.8:9866 (datanode1.bigdatamitmav0_default)
-Hostname: 15f8a0f8b64b
+Name: 172.19.0.6:9866 (datanode1.big-data-mitma_default)
+Hostname: 9e81a47250ce
 Decommission Status : Normal
 Configured Capacity: 1081101176832 (1006.85 GB)
-DFS Used: 11633261410 (10.83 GB)
-Non DFS Used: 22844888222 (21.28 GB)
-DFS Remaining: 991630671872 (923.53 GB)
+DFS Used: 11629588794 (10.83 GB)
+Non DFS Used: 23296388806 (21.70 GB)
+DFS Remaining: 991182843904 (923.11 GB)
 DFS Used%: 1.08%
-DFS Remaining%: 91.72%
+DFS Remaining%: 91.68%
 Configured Cache Capacity: 0 (0 B)
 Cache Used: 0 (0 B)
 Cache Remaining: 0 (0 B)
 Cache Used%: 100.00%
 Cache Remaining%: 0.00%
 Xceivers: 1
-Last contact: Tue Oct 20 14:23:39 UTC 2026
-Last Block Report: Tue Oct 20 13:55:46 UTC 2026
-Num of Blocks: 1738
+Last contact: Tue Oct 20 16:51:41 UTC 2026
+Last Block Report: Tue Oct 20 15:58:47 UTC 2026
+Num of Blocks: 1732
 
 

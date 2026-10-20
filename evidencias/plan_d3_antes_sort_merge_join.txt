@@ -49,7 +49,7 @@ Input [4]: [viajes#809, origen_extranjero#811, cod_prov_origen#813, fecha#815]
 
 (4) Exchange
 Input [3]: [viajes#809, cod_prov_origen#813, fecha#815]
-Arguments: hashpartitioning(fecha#815, 32), ENSURE_REQUIREMENTS, [plan_id=4854]
+Arguments: hashpartitioning(fecha#815, 32), ENSURE_REQUIREMENTS, [plan_id=4912]
 
 (5) Sort
 Input [3]: [viajes#809, cod_prov_origen#813, fecha#815]
@@ -71,7 +71,7 @@ Input [2]: [fecha#833, tipo_dia#835]
 
 (9) Exchange
 Input [2]: [fecha#838, tipo_dia#835]
-Arguments: hashpartitioning(fecha#838, 32), ENSURE_REQUIREMENTS, [plan_id=4855]
+Arguments: hashpartitioning(fecha#838, 32), ENSURE_REQUIREMENTS, [plan_id=4913]
 
 (10) Sort
 Input [2]: [fecha#838, tipo_dia#835]
@@ -89,7 +89,7 @@ Input [5]: [viajes#809, cod_prov_origen#813, fecha#815, fecha#838, tipo_dia#835]
 
 (13) Exchange
 Input [4]: [fecha#815, viajes#809, cod_prov_origen#813, tipo_dia#835]
-Arguments: hashpartitioning(cod_prov_origen#813, 32), ENSURE_REQUIREMENTS, [plan_id=4862]
+Arguments: hashpartitioning(cod_prov_origen#813, 32), ENSURE_REQUIREMENTS, [plan_id=4920]
 
 (14) Sort
 Input [4]: [fecha#815, viajes#809, cod_prov_origen#813, tipo_dia#835]
@@ -108,7 +108,7 @@ Condition : isnotnull(cod_provincia#856)
 
 (17) Exchange
 Input [3]: [cod_provincia#856, provincia#857, ccaa#858]
-Arguments: hashpartitioning(cod_provincia#856, 32), ENSURE_REQUIREMENTS, [plan_id=4863]
+Arguments: hashpartitioning(cod_provincia#856, 32), ENSURE_REQUIREMENTS, [plan_id=4921]
 
 (18) Sort
 Input [3]: [cod_provincia#856, provincia#857, ccaa#858]
@@ -133,7 +133,7 @@ Results [5]: [provincia#857, ccaa#858, fecha#815, tipo_dia#835, sum#2707]
 
 (22) Exchange
 Input [5]: [provincia#857, ccaa#858, fecha#815, tipo_dia#835, sum#2707]
-Arguments: hashpartitioning(provincia#857, ccaa#858, fecha#815, tipo_dia#835, 32), ENSURE_REQUIREMENTS, [plan_id=4870]
+Arguments: hashpartitioning(provincia#857, ccaa#858, fecha#815, tipo_dia#835, 32), ENSURE_REQUIREMENTS, [plan_id=4928]
 
 (23) HashAggregate
 Input [5]: [provincia#857, ccaa#858, fecha#815, tipo_dia#835, sum#2707]
@@ -151,7 +151,7 @@ Results [8]: [provincia#857, ccaa#858, sum#2700, count#2701L, sum#2702, count#27
 
 (25) Exchange
 Input [8]: [provincia#857, ccaa#858, sum#2700, count#2701L, sum#2702, count#2703L, sum#2704, count#2705L]
-Arguments: hashpartitioning(provincia#857, ccaa#858, 32), ENSURE_REQUIREMENTS, [plan_id=4874]
+Arguments: hashpartitioning(provincia#857, ccaa#858, 32), ENSURE_REQUIREMENTS, [plan_id=4932]
 
 (26) HashAggregate
 Input [8]: [provincia#857, ccaa#858, sum#2700, count#2701L, sum#2702, count#2703L, sum#2704, count#2705L]
@@ -166,7 +166,7 @@ Input [5]: [provincia#857, ccaa#858, media_laborable#2681, media_fin_de_semana#2
 
 (28) Exchange
 Input [7]: [provincia#857, ccaa#858, media_laborable#2681, media_fin_de_semana#2682, festivo_1_nov#2683, finde_vs_laborable_pct#2692, festivo_vs_laborable_pct#2693]
-Arguments: rangepartitioning(media_laborable#2681 DESC NULLS LAST, 32), ENSURE_REQUIREMENTS, [plan_id=4878]
+Arguments: rangepartitioning(media_laborable#2681 DESC NULLS LAST, 32), ENSURE_REQUIREMENTS, [plan_id=4936]
 
 (29) Sort
 Input [7]: [provincia#857, ccaa#858, media_laborable#2681, media_fin_de_semana#2682, festivo_1_nov#2683, finde_vs_laborable_pct#2692, festivo_vs_laborable_pct#2693]

@@ -56,7 +56,7 @@ Results [3]: [destino#799, fecha#815, sum#1272]
 
 (7) Exchange
 Input [3]: [destino#799, fecha#815, sum#1272]
-Arguments: hashpartitioning(destino#799, fecha#815, 32), ENSURE_REQUIREMENTS, [plan_id=4063]
+Arguments: hashpartitioning(destino#799, fecha#815, 32), ENSURE_REQUIREMENTS, [plan_id=4121]
 
 (8) HashAggregate
 Input [3]: [destino#799, fecha#815, sum#1272]
@@ -67,7 +67,7 @@ Results [3]: [destino#799, fecha#815, sum(viajes#809)#1263 AS viajes_dia#1243]
 
 (9) Exchange
 Input [3]: [destino#799, fecha#815, viajes_dia#1243]
-Arguments: hashpartitioning(destino#799, 32), ENSURE_REQUIREMENTS, [plan_id=4066]
+Arguments: hashpartitioning(destino#799, 32), ENSURE_REQUIREMENTS, [plan_id=4124]
 
 (10) Sort
 Input [3]: [destino#799, fecha#815, viajes_dia#1243]
@@ -114,7 +114,7 @@ Input [2]: [ID#860, name#861]
 
 (20) BroadcastExchange
 Input [2]: [id_municipio#862, nombre_municipio#863]
-Arguments: HashedRelationBroadcastMode(List(input[0, string, true]),false), [plan_id=4076]
+Arguments: HashedRelationBroadcastMode(List(input[0, string, true]),false), [plan_id=4134]
 
 (21) BroadcastHashJoin
 Left keys [1]: [destino#799]

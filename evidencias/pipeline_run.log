@@ -52,3 +52,48 @@ Hora de inicio: 20261020153007
 Fin de la transcripción de Windows PowerShell
 Hora de finalización: 20261020162340
 **********************
+**********************
+Inicio de la transcripci?n de Windows PowerShell
+Hora de inicio: 20261020175953
+Nombre de usuario: LENOVOLOQTELMO\tello
+Usuario RunAs: LENOVOLOQTELMO\tello
+Nombre de la configuraci?n: 
+M?quina: LENOVOLOQTELMO (Microsoft Windows NT 10.0.26200.0)
+Aplicaci?n host: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Bypass -File .\run_pipeline.ps1
+Id. de proceso: 21332
+PSVersion: 5.1.26100.9711
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.9711
+BuildVersion: 10.0.26100.9711
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+
+############ 0/7 Levantar el entorno (no hace nada si ya est?? levantado)
+
+
+############ 1/7 Descarga reproducible (solo lo que falte)
+
+
+############ 2/7 Ingesta en la zona raw de HDFS
+
+
+############ 3/7 Spark: smoke test, ETL (curated), formatos y preguntas anal??ticas
+
+
+############ 4/7 MapReduce con Hadoop Streaming (YARN)
+
+
+############ 5/7 Spark: misma agregaci??n con RDDs, ML y desaf??o F
+
+
+############ 6/7 Evidencias de HDFS (ls -R, du, count, fsck)
+
+
+############ 7/7 Fin. M??tricas en evidencias\metrics.json y resultados en evidencias\resultados\
+**********************
+Fin de la transcripci?n de Windows PowerShell
+Hora de finalizaci?n: 20261020185142
+**********************
