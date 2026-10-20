@@ -10,7 +10,7 @@ mismos totales.
 import inspect
 import json
 
-from common import ROOT, hdfs, measure
+from common import ROOT, hdfs, log, measure
 
 
 def provincia_fecha_rdd(sc, path, sep):
@@ -33,8 +33,9 @@ def run(spark, cfg, ev):
     # Cada repetición construye un RDD NUEVO. Si se repitiera count() sobre el mismo RDD, Spark
     # reutilizaría los ficheros de shuffle de la ejecución anterior (el stage de map aparece como
     # "skipped" en la Spark UI) y solo se mediría el reduce.
+    log(f"   textFile -> map -> filter -> reduceByKey sobre raw, {cfg['BENCH_REPEATS']} repeticiones...")
     tiempo = measure(lambda: provincia_fecha_rdd(sc, hdfs(cfg, "RAW_VIAJES"), cfg["CSV_SEP"]).count(),
-                     cfg["BENCH_REPEATS"])
+                     cfg["BENCH_REPEATS"], "RDD reduceByKey")
     rdd = provincia_fecha_rdd(sc, hdfs(cfg, "RAW_VIAJES"), cfg["CSV_SEP"])
     resultado = rdd.mapValues(lambda v: round(v, 3)).collect()           # 52 provincias x 7 días: pequeño
     filas = sorted(f"{k}\t{v}" for k, v in resultado)
@@ -51,6 +52,7 @@ def run(spark, cfg, ev):
         mr = (sc.textFile(hdfs(cfg, "MR_OUTPUT"))
                 .map(lambda l: l.split("\t"))
                 .map(lambda kv: (kv[0], float(kv[1]))))
+        log("   comparando con la salida de Hadoop Streaming (fullOuterJoin por clave)...")
         joined = rdd.fullOuterJoin(mr).collect()
         diffs = [abs((a or 0) - (b or 0)) for _, (a, b) in joined]
         res["comparacion_con_streaming"] = {

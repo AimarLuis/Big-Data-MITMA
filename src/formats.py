@@ -11,7 +11,7 @@ Además: el problema de gzip (no divisible) medido con getNumPartitions().
 """
 from pyspark.sql import functions as F
 
-from common import hdfs, measure, run_noop
+from common import hdfs, log, measure, run_noop
 from etl import VIAJES_SCHEMA, read_raw
 
 
@@ -33,13 +33,14 @@ def run(spark, cfg, ev):
                                                  spark._jsc.hadoopConfiguration())
     size = lambda key: fs.getContentSummary(jvm.org.apache.hadoop.fs.Path(hdfs(cfg, key))).getLength()
 
+    log(f"   misma consulta sobre CSV (raw) y Parquet (curated), {reps} repeticiones cada una...")
     res = {
         "tamano_csv_bytes": size("RAW_VIAJES"),
         "tamano_parquet_bytes": size("CURATED"),
-        "A_todas_las_filas_2_columnas": {"csv": measure(lambda: run_noop(q_a(csv)), reps),
-                                         "parquet": measure(lambda: run_noop(q_a(pq)), reps)},
-        "B_un_solo_dia": {"csv": measure(lambda: run_noop(q_b(csv)), reps),
-                          "parquet": measure(lambda: run_noop(q_b(pq)), reps)},
+        "A_todas_las_filas_2_columnas": {"csv": measure(lambda: run_noop(q_a(csv)), reps, "consulta A, CSV"),
+                                         "parquet": measure(lambda: run_noop(q_a(pq)), reps, "consulta A, Parquet")},
+        "B_un_solo_dia": {"csv": measure(lambda: run_noop(q_b(csv)), reps, "consulta B, CSV"),
+                          "parquet": measure(lambda: run_noop(q_b(pq)), reps, "consulta B, Parquet")},
         "particiones_lectura": {"csv_7_dias": csv.rdd.getNumPartitions(),
                                 "parquet_7_dias": pq.rdd.getNumPartitions()},
     }
@@ -64,4 +65,4 @@ def run(spark, cfg, ev):
             "conteo_csv": measure(lambda: one_csv.count(), 1),
         })
     except Exception as e:                      # si no se subió el .gz (no estaba en data/downloads)
-        print(f"   (sin .gz en {cfg['TMP_GZ']}: se omite la comparación gzip) {type(e).__name__}")
+        log(f"   (sin .gz en {cfg['TMP_GZ']}: se omite la comparación gzip) {type(e).__name__}")

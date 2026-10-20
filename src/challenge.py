@@ -13,7 +13,7 @@ Cada fichero es un objeto en la memoria del NameNode y una task más que planifi
 """
 from pyspark.sql import functions as F
 
-from common import hdfs, measure, run_noop
+from common import hdfs, log, measure, run_noop
 
 
 def run(spark, cfg, ev):
@@ -31,7 +31,8 @@ def run(spark, cfg, ev):
     res = {}
     for name, df in variantes.items():
         path = f"{base}/{name}"
-        t = measure(lambda: df.write.mode("overwrite").partitionBy(col).parquet(path), 1)
+        log(f"   variante {name}: escribiendo la tabla curada con partitionBy({col})...")
+        t = measure(lambda: df.write.mode("overwrite").partitionBy(col).parquet(path), 1, "escritura")
         summary = fs.getContentSummary(jvm.org.apache.hadoop.fs.Path(path))
         files = summary.getFileCount() - 1                     # -1: el fichero _SUCCESS
         lectura = spark.read.parquet(path)
@@ -40,7 +41,7 @@ def run(spark, cfg, ev):
             "tamano_medio_MB": round(summary.getLength() / max(files, 1) / 2**20, 2),
             "escritura": t,
             "lectura_suma_por_dia": measure(lambda: run_noop(lectura.groupBy(col).agg(F.sum("viajes"))),
-                                            cfg["BENCH_REPEATS"]),
+                                            cfg["BENCH_REPEATS"], f"lectura ({files} ficheros)"),
             "particiones_al_leer": lectura.rdd.getNumPartitions(),
         }
     ev.record("f3_archivos_pequenos", res)

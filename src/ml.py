@@ -18,7 +18,7 @@ from pyspark.ml.feature import OneHotEncoder, StringIndexer, VectorAssembler
 from pyspark.ml.regression import LinearRegression
 from pyspark.sql import functions as F
 
-from common import hdfs
+from common import hdfs, log
 
 
 def build_dataset(cur, municipio_col):
@@ -37,6 +37,7 @@ def evaluate(pred):
 def run(spark, cfg, ev):
     mun = cfg["ML_MUNICIPIO_COL"]
     cur = spark.read.parquet(hdfs(cfg, "CURATED"))
+    log(f"   dataset: una fila por ({mun}, edad) con los viajes medios diarios; train/test {cfg['ML_TRAIN_FRACTION']}...")
     data = build_dataset(cur, mun).cache()        # MLlib recorre los datos varias veces: cache (clase 6)
 
     frac = float(cfg["ML_TRAIN_FRACTION"])
@@ -51,6 +52,7 @@ def run(spark, cfg, ev):
     lr = LinearRegression(featuresCol="features", labelCol="label", regParam=0.01)
 
     pipeline = Pipeline(stages=[indexer_mun, indexer_edad, encoder, assembler, lr])
+    log("   ajustando el Pipeline (StringIndexer + OneHotEncoder + VectorAssembler + LinearRegression)...")
     model = pipeline.fit(train)                    # los codificadores también se ajustan SOLO con train
     pred = model.transform(test)
 

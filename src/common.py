@@ -12,6 +12,7 @@ import datetime as dt
 import io
 import json
 import os
+import re
 import time
 from contextlib import redirect_stdout
 from pathlib import Path
@@ -71,6 +72,10 @@ def get_spark(cfg, app_name="mitma-pipeline"):
              # comportamiento de Spark 3 visto en clase: el valor queda a null y lo detectan las
              # reglas de calidad, que lo mandan a cuarentena en lugar de parar todo el job.
              .config("spark.sql.ansi.enabled", "false")
+             # Sin la barra de progreso de Spark ([Stage 3:====>  (12 + 4) / 54]): se redibuja con
+             # \r, que en una terminal se sobrescribe, pero al pasar por el punto de entrada cada
+             # redibujado sale como una línea nueva. El progreso lo dan los log() de cada etapa.
+             .config("spark.ui.showConsoleProgress", "false")
              .getOrCreate())
     spark.sparkContext.setLogLevel("WARN")
     return spark
@@ -122,6 +127,7 @@ class Evidence:
         with redirect_stdout(buf):
             df.explain(mode=mode)
         (self.dir / f"plan_{name}.txt").write_text(buf.getvalue(), encoding="utf-8")
+        log(f"   plan -> evidencias/plan_{name}.txt: {resumen_plan(buf.getvalue())}")
 
 
 # ----------------------------------------------------------------------------- tiempos
@@ -130,12 +136,32 @@ def run_noop(df):
     df.write.format("noop").mode("overwrite").save()
 
 
-def measure(fn, repeats):
+def measure(fn, repeats, nombre=None):
     """Ejecuta fn() `repeats` veces y devuelve los tiempos (s) y la mediana.
-    La 1.ª ejecución suele ser más lenta (arranque, caché del sistema de ficheros): por eso la mediana."""
+    La 1.ª ejecución suele ser más lenta (arranque, caché del sistema de ficheros): por eso la mediana.
+    Con `nombre`, imprime una línea con los tiempos al terminar (así se ve el avance de la etapa)."""
     times = []
     for _ in range(int(repeats)):
         t = time.time()
         fn()
         times.append(round(time.time() - t, 2))
-    return {"tiempos_s": times, "mediana_s": sorted(times)[len(times) // 2]}
+    res = {"tiempos_s": times, "mediana_s": sorted(times)[len(times) // 2]}
+    if nombre:
+        txt = " / ".join(f"{t:.2f}" for t in times).replace(".", ",")
+        log(f"   {nombre}: {txt} s -> mediana {res['mediana_s']:.2f} s".replace(".", ","))
+    return res
+
+
+def resumen_plan(texto):
+    """Lo esencial de un plan físico (explain formatted), para la consola:
+    nº de Exchange (= shuffles), tipo de join, broadcasts, ventanas y filtros de partición."""
+    arbol = texto.split("\n\n")[0]                        # el árbol, sin el detalle de cada nodo
+    partes = [f"{len(re.findall(r'(?<!Broadcast)Exchange \(', arbol))} Exchange (shuffle)"]
+    for op in ("SortMergeJoin", "BroadcastHashJoin", "ShuffledHashJoin", "BroadcastExchange", "Window"):
+        n = len(re.findall(op + r"\b", arbol))
+        if n:
+            partes.append(f"{n} {op}")
+    pf = re.search(r"PartitionFilters: \[(.+?)\]", texto)
+    if pf:
+        partes.append(f"PartitionFilters [{pf.group(1)}]")
+    return ", ".join(partes)

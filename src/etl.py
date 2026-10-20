@@ -13,7 +13,7 @@ from pyspark.sql import functions as F
 from pyspark.sql.types import (DateType, DoubleType, IntegerType, StringType,
                                StructField, StructType)
 
-from common import hdfs
+from common import hdfs, log
 
 # Esquema de los ficheros diarios de MITMA, en el ORDEN de la cabecera:
 # fecha|periodo|origen|destino|distancia|actividad_origen|actividad_destino|
@@ -77,6 +77,7 @@ def es_extranjero(col):
 
 
 def run(spark, cfg, ev):
+    log("   leyendo raw con esquema explícito (StructType) y aplicando las reglas de calidad...")
     raw = read_raw(spark, cfg)
 
     # ---- 1-2. Tipado ---------------------------------------------------------------
@@ -86,11 +87,15 @@ def run(spark, cfg, ev):
              .withColumn("destino_extranjero", es_extranjero("destino")))
 
     # ---- 3. Reglas de calidad -> válidas / cuarentena (Tema 5: "Quarantine, don't delete")
-    rule = (F.col("fecha").between(F.lit(cfg["FECHA_INICIO"]), F.lit(cfg["FECHA_FIN"]))   # fecha válida y de la semana
-            & F.col("periodo").between(0, 23)                                            # hora del día
-            & F.col("origen").isNotNull() & F.col("destino").isNotNull()                 # claves del flujo
-            & F.col("viajes").isNotNull() & (F.col("viajes") > 0)                        # un flujo sin viajes no es un flujo
-            & (F.col("viajes_km").isNull() | (F.col("viajes_km") >= 0)))                 # km negativos = imposible
+    reglas = {
+        "regla_fecha": F.col("fecha").between(F.lit(cfg["FECHA_INICIO"]), F.lit(cfg["FECHA_FIN"])),  # fecha válida y de la semana
+        "regla_periodo": F.col("periodo").between(0, 23),                                         # hora del día
+        "regla_origen_destino": F.col("origen").isNotNull() & F.col("destino").isNotNull(),       # claves del flujo
+        "regla_viajes": F.col("viajes").isNotNull() & (F.col("viajes") > 0),                      # un flujo sin viajes no es un flujo
+        "regla_viajes_km": F.col("viajes_km").isNull() | (F.col("viajes_km") >= 0),               # km negativos = imposible
+    }
+    rule = (reglas["regla_fecha"] & reglas["regla_periodo"] & reglas["regla_origen_destino"]
+            & reglas["regla_viajes"] & reglas["regla_viajes_km"])
     ok = F.coalesce(rule, F.lit(False))            # True AND null = null -> el null cuenta como malo
 
     flagged = typed.withColumn("valida", ok)
@@ -106,11 +111,14 @@ def run(spark, cfg, ev):
         F.sum((F.col("sexo") == "NA").cast("int")).alias("sexo_NA"),
         F.sum((F.col("origen_extranjero") | F.col("destino_extranjero")).cast("int")).alias("filas_con_zona_extranjera"),
         F.sum("viajes").alias("viajes_raw"),
+        # filas que incumple CADA regla (una fila puede incumplir varias), en la misma pasada
+        *[F.sum((~F.coalesce(r, F.lit(False))).cast("int")).alias(k) for k, r in reglas.items()],
     ).first().asDict()
     filas_raw, filas_validas = stats["filas_raw"], stats["filas_validas"]
     filas_malas = filas_raw - filas_validas
     ev.record("etl_1_entrada", stats)
 
+    log("   escribiendo las filas inválidas en la zona de cuarentena...")
     bad = flagged.filter(~F.col("valida")).drop("valida")
     bad.write.mode("overwrite").parquet(hdfs(cfg, "QUARANTINE"))
     bad_ratio = filas_malas / filas_raw if filas_raw else 1.0
@@ -138,6 +146,7 @@ def run(spark, cfg, ev):
     # repartition(fecha): todas las filas de un día van a la misma task -> 1 fichero por día
     spark.conf.set("spark.sql.sources.partitionOverwriteMode", "dynamic")
     col = cfg["PARTITION_COLUMN"]
+    log(f"   dropDuplicates + escritura de curated en Parquet particionado por {col}...")
     (curated.repartition(col)
             .write.mode("overwrite")
             .partitionBy(col)
@@ -153,6 +162,7 @@ def run(spark, cfg, ev):
 
     # ---- Control de la tabla auxiliar (acción = AVISAR) -------------------------------------
     # Antes de un join: la clave tiene que ser única (clase 6, "TRAP: duplicate keys")
+    log("   comprobando la tabla auxiliar de municipios (claves únicas, orígenes sin nombre)...")
     mun = read_municipios(spark, cfg)
     claves_repetidas = mun.groupBy("id_municipio").count().filter("count > 1").count()
     sin_nombre = (out.filter(~F.col("origen_extranjero"))
@@ -166,7 +176,7 @@ def run(spark, cfg, ev):
                                        "origenes_sin_nombre": sin_nombre,
                                        "accion": "AVISO" if ratio > float(cfg["MAX_UNMATCHED_RATIO"]) else "OK"})
     if ratio > float(cfg["MAX_UNMATCHED_RATIO"]):
-        print(f"   AVISO: {ratio:.2%} de municipios de origen no están en la tabla auxiliar")
+        log(f"   AVISO: {ratio:.2%} de municipios de origen no están en la tabla auxiliar")
 
     # Historial de ejecuciones: con 2 ejecuciones seguidas, las cifras deben ser idénticas (E.2)
     ev.append_run({"filas_raw": filas_raw, "filas_cuarentena": filas_malas,

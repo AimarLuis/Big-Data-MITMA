@@ -15,6 +15,27 @@ hdfs dfs -rm -r -f -skipTrash "$MR_OUTPUT" > /dev/null    # idempotente: la sali
 
 log ">> hadoop jar $(basename "$JAR")  input=$RAW_VIAJES  output=$MR_OUTPUT  reducers=$MR_REDUCERS"
 log "   (progreso del job en http://localhost:8088)"
+# El log completo de Hadoop va a evidencias/mr_streaming.log. Por consola solo se muestran las
+# líneas clave y el progreso cada 25 % (Hadoop imprime una línea por cada 1-2 % de avance).
+filtro_consola() {
+  awk -v lm=-1 -v lr=-1 '
+    { sub(/^[0-9-]+ [0-9:,]+ (INFO|WARN|ERROR) [^:]*: /, "") }      # quita fecha, nivel y clase
+    /number of splits/      { print "   " $0 " (= nº de tareas map)"; fflush(); next }
+    /Running job/           { print "   " $0; fflush(); next }
+    /url to track/          { sub(/resourcemanager:8088/, "localhost:8088"); print "   " $0; fflush(); next }
+    / map [0-9]+% reduce [0-9]+%/ {
+      m = $0; sub(/.* map /, "", m); sub(/%.*/, "", m)
+      r = $0; sub(/.* reduce /, "", r); sub(/%.*/, "", r)
+      if (int(m / 25) != lm || int(r / 25) != lr) {
+        printf "   progreso: map %3d %%   reduce %3d %%\n", m, r; fflush()
+        lm = int(m / 25); lr = int(r / 25)
+      }
+      next
+    }
+    !/^[ \t]/ && /completed successfully|failed|FAILED|Error|Exception|Killed/ { print "   " $0; fflush() }
+  '
+}
+
 start=$(date +%s%N)
 hadoop jar "$JAR" \
   -D mapreduce.job.name="mitma-viajes-provincia-fecha" \
@@ -24,7 +45,7 @@ hadoop jar "$JAR" \
   -mapper "python3 mapper.py" \
   -reducer "python3 reducer.py" \
   -input "$RAW_VIAJES" \
-  -output "$MR_OUTPUT" 2>&1 | tee "$EVIDENCIAS/mr_streaming.log"
+  -output "$MR_OUTPUT" 2>&1 | tee "$EVIDENCIAS/mr_streaming.log" | filtro_consola
 end=$(date +%s%N)
 
 ms=$(( (end - start) / 1000000 ))

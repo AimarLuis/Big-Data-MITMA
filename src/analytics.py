@@ -16,7 +16,7 @@ import urllib.request
 from pyspark.sql import Window
 from pyspark.sql import functions as F
 
-from common import hdfs, measure, run_noop
+from common import hdfs, log, measure, run_noop
 from etl import read_aux, read_municipios
 
 
@@ -133,12 +133,14 @@ def run(spark, cfg, ev):
     municipios = read_municipios(spark, cfg)
 
     # ---- P1 ----------------------------------------------------------------------------
+    log("   P1: agrupación por provincia y tipo de día...")
     p1 = p1_provincia_tipo_dia(cur, calendario, provincias)
     ev.save_plan(p1, "d2_p1")
     ev.save_result(p1, "d2_p1_provincia_tipo_dia")
     ev.record("d2_p1_filas", p1.count())
 
     # ---- P2 (SQL) ------------------------------------------------------------------------
+    log("   P2: ranking de destinos por día (Spark SQL + ROW_NUMBER)...")
     cur.createOrReplaceTempView("viajes")
     municipios.createOrReplaceTempView("municipios")
     p2 = p2_top_destinos_dia(spark, cfg["TOP_N"])
@@ -147,6 +149,7 @@ def run(spark, cfg, ev):
     ev.record("d2_p2_filas", p2.count())
 
     # ---- P3 ----------------------------------------------------------------------------
+    log("   P3: desviación respecto a la media semanal (ventanas avg + lag)...")
     p3 = p3_desviacion_municipio(cur, municipios, cfg["UMBRAL_MUNICIPIO_GRANDE"]).cache()
     ev.save_plan(p3, "d2_p3")
     ev.save_result(p3.orderBy("destino", "fecha"), "d2_p3_desviacion_municipio_dia")
@@ -163,7 +166,8 @@ def run(spark, cfg, ev):
     spark.conf.set("spark.sql.autoBroadcastJoinThreshold", -1)          # -1 = nunca broadcast
     antes = p1_provincia_tipo_dia(cur, calendario, provincias)
     ev.save_plan(antes, "d3_antes_sort_merge_join")
-    t_antes = measure(lambda: run_noop(antes), reps)
+    log(f"   D3: P1 con sort-merge join (broadcast desactivado), {reps} repeticiones...")
+    t_antes = measure(lambda: run_noop(antes), reps, "P1 con sort-merge join")
     sc.setJobGroup("d3_antes", "P1 con sort-merge join")        # una ejecución más, etiquetada,
     run_noop(antes)                                             # para leer sus stages en la UI
     stages_antes = stages_of_group(spark, "d3_antes")
@@ -171,7 +175,8 @@ def run(spark, cfg, ev):
     spark.conf.set("spark.sql.autoBroadcastJoinThreshold", 10 * 1024 * 1024)   # por defecto: 10 MB
     despues = p1_provincia_tipo_dia(cur, calendario, provincias)
     ev.save_plan(despues, "d3_despues_broadcast_join")
-    t_despues = measure(lambda: run_noop(despues), reps)
+    log(f"   D3: P1 con broadcast join (umbral 10 MB), {reps} repeticiones...")
+    t_despues = measure(lambda: run_noop(despues), reps, "P1 con broadcast join")
     sc.setJobGroup("d3_despues", "P1 con broadcast join")
     run_noop(despues)
     stages_despues = stages_of_group(spark, "d3_despues")

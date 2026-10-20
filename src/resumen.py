@@ -37,20 +37,21 @@ def veces(lento, rapido):
     return "x" + num(lento / rapido, 1) if rapido else "-"
 
 
-def _celda(x):
+def _celda(x, entero=False):
     """'20426994.0' -> '20.426.994';  '-22.3' -> '-22,3';  un texto se deja igual."""
     try:
         v = float(x)
     except (TypeError, ValueError):
         return str(x), False
-    return num(v, 0 if abs(v) >= 1000 or "." not in str(x) else 1), True
+    return num(v, 0 if entero or abs(v) >= 1000 or "." not in str(x) else 1), True
 
 
 def tabla(filas, columnas, max_filas=5, sangria="      "):
     """Tabla de texto con las primeras filas de un CSV de resultados.
     columnas = [(columna_del_csv, cabecera), ...]; los números van alineados a la derecha."""
     filas = filas[:max_filas]
-    celdas = [[_celda(f.get(c, "")) for c, _ in columnas] for f in filas]
+    celdas = [[_celda(f.get(c, ""), entero=c.startswith(("viajes", "media_"))) for c, _ in columnas]
+              for f in filas]
     anchos = [max([len(h)] + [len(fila[i][0]) for fila in celdas]) for i, (_, h) in enumerate(columnas)]
     out = [sangria + "  ".join(h.ljust(a) for (_, h), a in zip(columnas, anchos))]
     for fila in celdas:
@@ -73,27 +74,40 @@ def _smoke(v):
             f"HDFS: escribe y vuelve a leer {v['filas_leidas']} filas -> OK"]
 
 
+REGLAS = [("regla_fecha", "fecha válida y dentro de la semana"),
+          ("regla_periodo", "periodo (hora) entre 0 y 23"),
+          ("regla_origen_destino", "origen y destino no nulos"),
+          ("regla_viajes", "viajes no nulos y > 0"),
+          ("regla_viajes_km", "viajes_km >= 0 (o nulo)")]
+
+
 def _etl_entrada(v):
-    return [f"raw: {num(v['filas_raw'])} filas, {num(v['viajes_raw'] / 1e6, 1)} M viajes",
-            f"nulos en fecha / periodo / viajes: {v['nulos_fecha']} / {v['nulos_periodo']} / {v['nulos_viajes']}",
-            f"edad NA: {num(v['edad_NA'])}  |  sexo NA: {num(v['sexo_NA'])}  |  "
-            f"filas con zona extranjera: {num(v['filas_con_zona_extranjera'])}"]
+    out = [f"raw: {num(v['filas_raw'])} filas, {num(v['viajes_raw'] / 1e6, 1)} M viajes",
+           f"nulos en fecha / periodo / viajes: {v['nulos_fecha']} / {v['nulos_periodo']} / {v['nulos_viajes']}",
+           f"edad NA: {num(v['edad_NA'])}  |  sexo NA: {num(v['sexo_NA'])}  |  "
+           f"filas con zona extranjera: {num(v['filas_con_zona_extranjera'])} (se conservan y se marcan)"]
+    if all(k in v for k, _ in REGLAS):
+        out.append(f"{'control de calidad':<38}{'filas que fallan':>17}   acción")
+        for k, texto in REGLAS:
+            out.append(f"{texto:<38}{num(v[k]):>17}   -> cuarentena")
+    return out
 
 
 def _etl_cuarentena(v):
-    return [f"cuarentena: {num(v['filas'])} filas ({num(100 * v['proporcion'], 3)} %; "
-            f"el pipeline se detiene por encima del {num(100 * v['umbral_detener'], 0)} %)"]
+    accion = "DETENER" if v["proporcion"] > v["umbral_detener"] else "continuar"
+    return [f"cuarentena: {num(v['filas'])} filas ({num(100 * v['proporcion'], 3)} %) -> {accion} "
+            f"(se detiene por encima del {num(100 * v['umbral_detener'], 0)} %)"]
 
 
 def _etl_curated(v):
     return [f"curated: {num(v['filas_curated'])} filas en {v['fechas']} particiones fecha=..., "
             f"{num(v['viajes_curated'] / 1e6, 1)} M viajes",
-            f"duplicados eliminados: {num(v['duplicados_eliminados'])}"]
+            f"duplicados (clave natural de 13 columnas): {num(v['duplicados_eliminados'])} -> eliminar y registrar"]
 
 
 def _etl_aux(v):
     return [f"tabla de municipios: {num(v['municipios_en_tabla'])} códigos ({v['claves_repetidas']} repetidos); "
-            f"orígenes sin nombre: {v['origenes_sin_nombre']} de {num(v['origenes_espanoles_distintos'])} -> {v['accion']}"]
+            f"orígenes sin nombre: {v['origenes_sin_nombre']} de {num(v['origenes_espanoles_distintos'])} -> {v['accion']} (avisa por encima del 1 %)"]
 
 
 def _formatos(v):
@@ -164,7 +178,9 @@ def _mr_rdd(v):
         t_mr = v["streaming_tiempo_ms"] / 1000
         out.append(f"Hadoop Streaming: {seg(t_mr)} -> el RDD es {veces(t_mr, v['rdd_tiempo']['mediana_s'])} más rápido")
     c = v.get("comparacion_con_streaming")
-    if c:
+    if isinstance(c, str):
+        out.append(f"comparación con Streaming: {c}")
+    elif c:
         out.append(f"comparación: {c['claves']} claves, {c['claves_solo_en_una_version']} solo en una versión, "
                    f"diferencia máxima {num(c['max_diferencia_abs'], 4)} viajes")
     loc = v["lineas_de_codigo"]
