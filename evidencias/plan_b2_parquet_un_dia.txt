@@ -8,36 +8,36 @@ AdaptiveSparkPlan (6)
 
 
 (1) Scan parquet 
-Output [3]: [origen#309, viajes#320, fecha#326]
+Output [3]: [origen#339, viajes#350, fecha#356]
 Batched: true
 Location: InMemoryFileIndex [hdfs://namenode:9000/curated/mitma/viajes]
-PartitionFilters: [isnotnull(fecha#326), (fecha#326 = 2022-10-26)]
+PartitionFilters: [isnotnull(fecha#356), (fecha#356 = 2022-10-26)]
 ReadSchema: struct<origen:string,viajes:double>
 
 (2) Project
-Output [2]: [origen#309, viajes#320]
-Input [3]: [origen#309, viajes#320, fecha#326]
+Output [2]: [origen#339, viajes#350]
+Input [3]: [origen#339, viajes#350, fecha#356]
 
 (3) HashAggregate
-Input [2]: [origen#309, viajes#320]
-Keys [1]: [origen#309]
-Functions [1]: [partial_sum(viajes#320)]
-Aggregate Attributes [1]: [sum#678]
-Results [2]: [origen#309, sum#679]
+Input [2]: [origen#339, viajes#350]
+Keys [1]: [origen#339]
+Functions [1]: [partial_sum(viajes#350)]
+Aggregate Attributes [1]: [sum#708]
+Results [2]: [origen#339, sum#709]
 
 (4) Exchange
-Input [2]: [origen#309, sum#679]
-Arguments: hashpartitioning(origen#309, 32), ENSURE_REQUIREMENTS, [plan_id=1449]
+Input [2]: [origen#339, sum#709]
+Arguments: hashpartitioning(origen#339, 32), ENSURE_REQUIREMENTS, [plan_id=1449]
 
 (5) HashAggregate
-Input [2]: [origen#309, sum#679]
-Keys [1]: [origen#309]
-Functions [1]: [sum(viajes#320)]
-Aggregate Attributes [1]: [sum(viajes#320)#677]
-Results [2]: [origen#309, sum(viajes#320)#677 AS viajes#657]
+Input [2]: [origen#339, sum#709]
+Keys [1]: [origen#339]
+Functions [1]: [sum(viajes#350)]
+Aggregate Attributes [1]: [sum(viajes#350)#707]
+Results [2]: [origen#339, sum(viajes#350)#707 AS viajes#687]
 
 (6) AdaptiveSparkPlan
-Output [2]: [origen#309, viajes#657]
+Output [2]: [origen#339, viajes#687]
 Arguments: isFinalPlan=false
 
 

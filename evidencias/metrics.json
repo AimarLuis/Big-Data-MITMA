@@ -6,7 +6,7 @@
     "spark_version": "4.2.0",
     "python": "3.13.15"
   },
-  "tiempo_etapa_smoke_s": 7.2,
+  "tiempo_etapa_smoke_s": 7.8,
   "etl_1_entrada": {
     "filas_raw": 78340906,
     "filas_validas": 78340906,
@@ -16,7 +16,12 @@
     "edad_NA": 23674348,
     "sexo_NA": 40612444,
     "filas_con_zona_extranjera": 704364,
-    "viajes_raw": 883809802.5855925
+    "viajes_raw": 883809802.5855925,
+    "regla_fecha": 0,
+    "regla_periodo": 0,
+    "regla_origen_destino": 0,
+    "regla_viajes": 0,
+    "regla_viajes_km": 0
   },
   "etl_2_cuarentena": {
     "filas": 0,
@@ -26,7 +31,7 @@
   "etl_3_curated": {
     "filas_curated": 78340906,
     "fechas": 7,
-    "viajes_curated": 883809802.5862302,
+    "viajes_curated": 883809802.586239,
     "duplicados_eliminados": 0
   },
   "etl_4_tabla_auxiliar": {
@@ -36,44 +41,44 @@
     "origenes_sin_nombre": 0,
     "accion": "OK"
   },
-  "tiempo_etapa_etl_s": 497.4,
+  "tiempo_etapa_etl_s": 607.6,
   "b2_formatos": {
     "tamano_csv_bytes": 6871662808,
-    "tamano_parquet_bytes": 992253641,
+    "tamano_parquet_bytes": 991882954,
     "A_todas_las_filas_2_columnas": {
       "csv": {
         "tiempos_s": [
-          36.58,
-          33.36,
-          33.92
+          46.49,
+          43.08,
+          43.57
         ],
-        "mediana_s": 33.92
+        "mediana_s": 43.57
       },
       "parquet": {
         "tiempos_s": [
-          0.94,
-          0.76,
-          0.75
+          1.33,
+          1.01,
+          0.94
         ],
-        "mediana_s": 0.76
+        "mediana_s": 1.01
       }
     },
     "B_un_solo_dia": {
       "csv": {
         "tiempos_s": [
-          37.44,
-          38.85,
-          33.24
+          50.45,
+          43.72,
+          42.19
         ],
-        "mediana_s": 37.44
+        "mediana_s": 43.72
       },
       "parquet": {
         "tiempos_s": [
-          1.16,
-          0.94,
-          0.89
+          1.72,
+          1.53,
+          1.21
         ],
-        "mediana_s": 0.94
+        "mediana_s": 1.53
       }
     },
     "particiones_lectura": {
@@ -87,38 +92,38 @@
     "particiones_csv": 8,
     "conteo_gz": {
       "tiempos_s": [
-        4.6
+        5.5
       ],
-      "mediana_s": 4.6
+      "mediana_s": 5.5
     },
     "conteo_csv": {
       "tiempos_s": [
-        1.34
+        1.04
       ],
-      "mediana_s": 1.34
+      "mediana_s": 1.04
     }
   },
-  "tiempo_etapa_formats_s": 225.3,
+  "tiempo_etapa_formats_s": 284.5,
   "d2_p1_filas": 52,
   "d2_p2_filas": 21,
   "d2_p3_filas": 6174,
   "d3_optimizacion_broadcast": {
     "antes_sort_merge": {
       "tiempos_s": [
-        51.82,
-        41.78,
-        40.06
+        56.55,
+        52.22,
+        52.35
       ],
-      "mediana_s": 41.78,
+      "mediana_s": 52.35,
       "stages_spark_ui": {
         "stages_ejecutados": 9,
-        "shuffle_write_total_MB": 1210.5,
+        "shuffle_write_total_MB": 1209.2,
         "detalle": [
           {
             "stage": 359,
-            "tareas": 8,
-            "lectura_entrada_MB": 263.8,
-            "shuffle_write_MB": 637.8,
+            "tareas": 1,
+            "lectura_entrada_MB": 0.0,
+            "shuffle_write_MB": 0.0,
             "shuffle_read_MB": 0.0
           },
           {
@@ -130,24 +135,24 @@
           },
           {
             "stage": 361,
-            "tareas": 1,
-            "lectura_entrada_MB": 0.0,
-            "shuffle_write_MB": 0.0,
+            "tareas": 8,
+            "lectura_entrada_MB": 263.7,
+            "shuffle_write_MB": 636.6,
             "shuffle_read_MB": 0.0
           },
           {
             "stage": 364,
             "tareas": 6,
             "lectura_entrada_MB": 0.0,
-            "shuffle_write_MB": 572.7,
-            "shuffle_read_MB": 637.8
+            "shuffle_write_MB": 572.6,
+            "shuffle_read_MB": 636.6
           },
           {
             "stage": 369,
             "tareas": 12,
             "lectura_entrada_MB": 0.0,
             "shuffle_write_MB": 0.0,
-            "shuffle_read_MB": 572.7
+            "shuffle_read_MB": 572.6
           },
           {
             "stage": 375,
@@ -182,11 +187,11 @@
     },
     "despues_broadcast": {
       "tiempos_s": [
-        9.7,
-        9.09,
-        8.85
+        12.78,
+        11.34,
+        11.74
       ],
-      "mediana_s": 9.09,
+      "mediana_s": 11.74,
       "stages_spark_ui": {
         "stages_ejecutados": 7,
         "shuffle_write_total_MB": 0.0,
@@ -208,7 +213,7 @@
           {
             "stage": 445,
             "tareas": 8,
-            "lectura_entrada_MB": 263.8,
+            "lectura_entrada_MB": 263.7,
             "shuffle_write_MB": 0.0,
             "shuffle_read_MB": 0.0
           },
@@ -243,17 +248,17 @@
         ]
       }
     },
-    "mejora_pct": 78.2
+    "mejora_pct": 77.6
   },
-  "tiempo_etapa_analytics_s": 266.4,
+  "tiempo_etapa_analytics_s": 325.6,
   "c_mapreduce_vs_rdd": {
     "rdd_tiempo": {
       "tiempos_s": [
-        44.29,
-        41.93,
-        43.55
+        59.94,
+        56.88,
+        52.61
       ],
-      "mediana_s": 43.55
+      "mediana_s": 56.88
     },
     "rdd_claves": 364,
     "lineas_de_codigo": {
@@ -265,9 +270,9 @@
       "claves_solo_en_una_version": 0,
       "max_diferencia_abs": 0.0005
     },
-    "streaming_tiempo_ms": 259090
+    "streaming_tiempo_ms": 312879
   },
-  "tiempo_etapa_mr_rdd_s": 177.9,
+  "tiempo_etapa_mr_rdd_s": 230.5,
   "e3_ml": {
     "filas": {
       "total": 12815,
@@ -307,24 +312,24 @@
       "25-45": -0.2018
     }
   },
-  "tiempo_etapa_ml_s": 31.6,
+  "tiempo_etapa_ml_s": 41.4,
   "f3_archivos_pequenos": {
     "1_shuffle_200_por_defecto": {
       "ficheros": 1400,
       "tamano_medio_MB": 0.9,
       "escritura": {
         "tiempos_s": [
-          274.1
+          297.73
         ],
-        "mediana_s": 274.1
+        "mediana_s": 297.73
       },
       "lectura_suma_por_dia": {
         "tiempos_s": [
-          4.86,
-          2.88,
-          2.55
+          6.35,
+          4.71,
+          3.71
         ],
-        "mediana_s": 2.88
+        "mediana_s": 4.71
       },
       "particiones_al_leer": 54
     },
@@ -333,39 +338,39 @@
       "tamano_medio_MB": 5.18,
       "escritura": {
         "tiempos_s": [
-          244.75
+          263.78
         ],
-        "mediana_s": 244.75
+        "mediana_s": 263.78
       },
       "lectura_suma_por_dia": {
         "tiempos_s": [
-          1.08,
-          1.05,
-          0.84
+          1.56,
+          1.28,
+          1.09
         ],
-        "mediana_s": 1.05
+        "mediana_s": 1.28
       },
       "particiones_al_leer": 17
     },
     "3_repartition_por_fecha": {
       "ficheros": 7,
-      "tamano_medio_MB": 137.07,
+      "tamano_medio_MB": 136.97,
       "escritura": {
         "tiempos_s": [
-          178.77
+          243.64
         ],
-        "mediana_s": 178.77
+        "mediana_s": 243.64
       },
       "lectura_suma_por_dia": {
         "tiempos_s": [
-          0.91,
-          0.81,
-          0.71
+          1.32,
+          1.13,
+          1.15
         ],
-        "mediana_s": 0.81
+        "mediana_s": 1.15
       },
       "particiones_al_leer": 8
     }
   },
-  "tiempo_etapa_challenge_s": 714.3
+  "tiempo_etapa_challenge_s": 828.7
 }

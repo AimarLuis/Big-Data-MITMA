@@ -24,105 +24,105 @@ AdaptiveSparkPlan (22)
 
 
 (1) Scan parquet 
-Output [4]: [destino#1087, viajes#1097, destino_extranjero#1100, fecha#1103]
+Output [4]: [destino#1117, viajes#1127, destino_extranjero#1130, fecha#1133]
 Batched: true
 Location: InMemoryFileIndex [hdfs://namenode:9000/curated/mitma/viajes]
 PushedFilters: [IsNotNull(destino_extranjero), Not(EqualTo(destino_extranjero,true))]
 ReadSchema: struct<destino:string,viajes:double,destino_extranjero:boolean>
 
 (2) Filter
-Input [4]: [destino#1087, viajes#1097, destino_extranjero#1100, fecha#1103]
-Condition : (isnotnull(destino_extranjero#1100) AND NOT destino_extranjero#1100)
+Input [4]: [destino#1117, viajes#1127, destino_extranjero#1130, fecha#1133]
+Condition : (isnotnull(destino_extranjero#1130) AND NOT destino_extranjero#1130)
 
 (3) Project
-Output [3]: [destino#1087, viajes#1097, fecha#1103]
-Input [4]: [destino#1087, viajes#1097, destino_extranjero#1100, fecha#1103]
+Output [3]: [destino#1117, viajes#1127, fecha#1133]
+Input [4]: [destino#1117, viajes#1127, destino_extranjero#1130, fecha#1133]
 
 (4) HashAggregate
-Input [3]: [destino#1087, viajes#1097, fecha#1103]
-Keys [2]: [fecha#1103, destino#1087]
-Functions [1]: [partial_sum(viajes#1097)]
-Aggregate Attributes [1]: [sum#1106]
-Results [3]: [fecha#1103, destino#1087, sum#1107]
+Input [3]: [destino#1117, viajes#1127, fecha#1133]
+Keys [2]: [fecha#1133, destino#1117]
+Functions [1]: [partial_sum(viajes#1127)]
+Aggregate Attributes [1]: [sum#1136]
+Results [3]: [fecha#1133, destino#1117, sum#1137]
 
 (5) Exchange
-Input [3]: [fecha#1103, destino#1087, sum#1107]
-Arguments: hashpartitioning(fecha#1103, destino#1087, 32), ENSURE_REQUIREMENTS, [plan_id=2955]
+Input [3]: [fecha#1133, destino#1117, sum#1137]
+Arguments: hashpartitioning(fecha#1133, destino#1117, 32), ENSURE_REQUIREMENTS, [plan_id=2956]
 
 (6) HashAggregate
-Input [3]: [fecha#1103, destino#1087, sum#1107]
-Keys [2]: [fecha#1103, destino#1087]
-Functions [1]: [sum(viajes#1097)]
-Aggregate Attributes [1]: [sum(viajes#1097)#1058]
-Results [3]: [fecha#1103, destino#1087, sum(viajes#1097)#1058 AS viajes_recibidos#1104]
+Input [3]: [fecha#1133, destino#1117, sum#1137]
+Keys [2]: [fecha#1133, destino#1117]
+Functions [1]: [sum(viajes#1127)]
+Aggregate Attributes [1]: [sum(viajes#1127)#1088]
+Results [3]: [fecha#1133, destino#1117, sum(viajes#1127)#1088 AS viajes_recibidos#1134]
 
 (7) Sort
-Input [3]: [fecha#1103, destino#1087, viajes_recibidos#1104]
-Arguments: [fecha#1103 ASC NULLS FIRST, viajes_recibidos#1104 DESC NULLS LAST], false, 0
+Input [3]: [fecha#1133, destino#1117, viajes_recibidos#1134]
+Arguments: [fecha#1133 ASC NULLS FIRST, viajes_recibidos#1134 DESC NULLS LAST], false, 0
 
 (8) WindowGroupLimit
-Input [3]: [fecha#1103, destino#1087, viajes_recibidos#1104]
-Arguments: [fecha#1103], [viajes_recibidos#1104 DESC NULLS LAST], row_number(), 3, Partial
+Input [3]: [fecha#1133, destino#1117, viajes_recibidos#1134]
+Arguments: [fecha#1133], [viajes_recibidos#1134 DESC NULLS LAST], row_number(), 3, Partial
 
 (9) Exchange
-Input [3]: [fecha#1103, destino#1087, viajes_recibidos#1104]
-Arguments: hashpartitioning(fecha#1103, 32), ENSURE_REQUIREMENTS, [plan_id=2961]
+Input [3]: [fecha#1133, destino#1117, viajes_recibidos#1134]
+Arguments: hashpartitioning(fecha#1133, 32), ENSURE_REQUIREMENTS, [plan_id=2962]
 
 (10) Sort
-Input [3]: [fecha#1103, destino#1087, viajes_recibidos#1104]
-Arguments: [fecha#1103 ASC NULLS FIRST, viajes_recibidos#1104 DESC NULLS LAST], false, 0
+Input [3]: [fecha#1133, destino#1117, viajes_recibidos#1134]
+Arguments: [fecha#1133 ASC NULLS FIRST, viajes_recibidos#1134 DESC NULLS LAST], false, 0
 
 (11) WindowGroupLimit
-Input [3]: [fecha#1103, destino#1087, viajes_recibidos#1104]
-Arguments: [fecha#1103], [viajes_recibidos#1104 DESC NULLS LAST], row_number(), 3, Final
+Input [3]: [fecha#1133, destino#1117, viajes_recibidos#1134]
+Arguments: [fecha#1133], [viajes_recibidos#1134 DESC NULLS LAST], row_number(), 3, Final
 
 (12) Window
-Input [3]: [fecha#1103, destino#1087, viajes_recibidos#1104]
-Arguments: [row_number() windowspecdefinition(fecha#1103, viajes_recibidos#1104 DESC NULLS LAST, specifiedwindowframe(RowFrame, unboundedpreceding$(), currentrow$())) AS puesto#1105], [fecha#1103], [viajes_recibidos#1104 DESC NULLS LAST]
+Input [3]: [fecha#1133, destino#1117, viajes_recibidos#1134]
+Arguments: [row_number() windowspecdefinition(fecha#1133, viajes_recibidos#1134 DESC NULLS LAST, specifiedwindowframe(RowFrame, unboundedpreceding$(), currentrow$())) AS puesto#1135], [fecha#1133], [viajes_recibidos#1134 DESC NULLS LAST]
 
 (13) Filter
-Input [4]: [fecha#1103, destino#1087, viajes_recibidos#1104, puesto#1105]
-Condition : (puesto#1105 <= 3)
+Input [4]: [fecha#1133, destino#1117, viajes_recibidos#1134, puesto#1135]
+Condition : (puesto#1135 <= 3)
 
 (14) Scan csv 
-Output [2]: [ID#860, name#861]
+Output [2]: [ID#890, name#891]
 Batched: false
 Location: InMemoryFileIndex [hdfs://namenode:9000/raw/mitma/municipios]
 PushedFilters: [IsNotNull(ID)]
 ReadSchema: struct<ID:string,name:string>
 
 (15) Filter
-Input [2]: [ID#860, name#861]
-Condition : isnotnull(ID#860)
+Input [2]: [ID#890, name#891]
+Condition : isnotnull(ID#890)
 
 (16) Project
-Output [2]: [ID#860 AS id_municipio#862, name#861 AS nombre_municipio#863]
-Input [2]: [ID#860, name#861]
+Output [2]: [ID#890 AS id_municipio#892, name#891 AS nombre_municipio#893]
+Input [2]: [ID#890, name#891]
 
 (17) BroadcastExchange
-Input [2]: [id_municipio#862, nombre_municipio#863]
-Arguments: HashedRelationBroadcastMode(List(input[0, string, true]),false), [plan_id=2967]
+Input [2]: [id_municipio#892, nombre_municipio#893]
+Arguments: HashedRelationBroadcastMode(List(input[0, string, true]),false), [plan_id=2968]
 
 (18) BroadcastHashJoin
-Left keys [1]: [destino#1087]
-Right keys [1]: [id_municipio#862]
+Left keys [1]: [destino#1117]
+Right keys [1]: [id_municipio#892]
 Join type: LeftOuter
 Join condition: None
 
 (19) Project
-Output [5]: [fecha#1103, puesto#1105, destino#1087, nombre_municipio#863, round(viajes_recibidos#1104, 0) AS viajes_recibidos#1055]
-Input [6]: [fecha#1103, destino#1087, viajes_recibidos#1104, puesto#1105, id_municipio#862, nombre_municipio#863]
+Output [5]: [fecha#1133, puesto#1135, destino#1117, nombre_municipio#893, round(viajes_recibidos#1134, 0) AS viajes_recibidos#1085]
+Input [6]: [fecha#1133, destino#1117, viajes_recibidos#1134, puesto#1135, id_municipio#892, nombre_municipio#893]
 
 (20) Exchange
-Input [5]: [fecha#1103, puesto#1105, destino#1087, nombre_municipio#863, viajes_recibidos#1055]
-Arguments: rangepartitioning(fecha#1103 ASC NULLS FIRST, puesto#1105 ASC NULLS FIRST, 32), ENSURE_REQUIREMENTS, [plan_id=2971]
+Input [5]: [fecha#1133, puesto#1135, destino#1117, nombre_municipio#893, viajes_recibidos#1085]
+Arguments: rangepartitioning(fecha#1133 ASC NULLS FIRST, puesto#1135 ASC NULLS FIRST, 32), ENSURE_REQUIREMENTS, [plan_id=2972]
 
 (21) Sort
-Input [5]: [fecha#1103, puesto#1105, destino#1087, nombre_municipio#863, viajes_recibidos#1055]
-Arguments: [fecha#1103 ASC NULLS FIRST, puesto#1105 ASC NULLS FIRST], true, 0
+Input [5]: [fecha#1133, puesto#1135, destino#1117, nombre_municipio#893, viajes_recibidos#1085]
+Arguments: [fecha#1133 ASC NULLS FIRST, puesto#1135 ASC NULLS FIRST], true, 0
 
 (22) AdaptiveSparkPlan
-Output [5]: [fecha#1103, puesto#1105, destino#1087, nombre_municipio#863, viajes_recibidos#1055]
+Output [5]: [fecha#1133, puesto#1135, destino#1117, nombre_municipio#893, viajes_recibidos#1085]
 Arguments: isFinalPlan=false
 
 

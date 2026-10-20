@@ -26,112 +26,112 @@ AdaptiveSparkPlan (24)
 
 
 (1) InMemoryTableScan
-Output [7]: [fecha#815, destino#799, nombre_municipio#863, viajes_dia#1269, media_semana#1270, desviacion_pct#1266, variacion_dia_anterior_pct#1268]
-Arguments: [fecha#815, destino#799, nombre_municipio#863, viajes_dia#1269, media_semana#1270, desviacion_pct#1266, variacion_dia_anterior_pct#1268]
+Output [7]: [fecha#845, destino#829, nombre_municipio#893, viajes_dia#1299, media_semana#1300, desviacion_pct#1296, variacion_dia_anterior_pct#1298]
+Arguments: [fecha#845, destino#829, nombre_municipio#893, viajes_dia#1299, media_semana#1300, desviacion_pct#1296, variacion_dia_anterior_pct#1298]
 
 (2) InMemoryRelation
-Arguments: [fecha#815, destino#799, nombre_municipio#863, viajes_dia#1269, media_semana#1270, desviacion_pct#1266, variacion_dia_anterior_pct#1268], StorageLevel(disk, memory, deserialized, 1 replicas)
+Arguments: [fecha#845, destino#829, nombre_municipio#893, viajes_dia#1299, media_semana#1300, desviacion_pct#1296, variacion_dia_anterior_pct#1298], StorageLevel(disk, memory, deserialized, 1 replicas)
 
 (3) Scan parquet 
-Output [4]: [destino#799, viajes#809, destino_extranjero#812, fecha#815]
+Output [4]: [destino#829, viajes#839, destino_extranjero#842, fecha#845]
 Batched: true
 Location: InMemoryFileIndex [hdfs://namenode:9000/curated/mitma/viajes]
 PushedFilters: [IsNotNull(destino_extranjero), Not(EqualTo(destino_extranjero,true))]
 ReadSchema: struct<destino:string,viajes:double,destino_extranjero:boolean>
 
 (4) Filter
-Input [4]: [destino#799, viajes#809, destino_extranjero#812, fecha#815]
-Condition : (isnotnull(destino_extranjero#812) AND NOT destino_extranjero#812)
+Input [4]: [destino#829, viajes#839, destino_extranjero#842, fecha#845]
+Condition : (isnotnull(destino_extranjero#842) AND NOT destino_extranjero#842)
 
 (5) Project
-Output [3]: [destino#799, viajes#809, fecha#815]
-Input [4]: [destino#799, viajes#809, destino_extranjero#812, fecha#815]
+Output [3]: [destino#829, viajes#839, fecha#845]
+Input [4]: [destino#829, viajes#839, destino_extranjero#842, fecha#845]
 
 (6) HashAggregate
-Input [3]: [destino#799, viajes#809, fecha#815]
-Keys [2]: [destino#799, fecha#815]
-Functions [1]: [partial_sum(viajes#809)]
-Aggregate Attributes [1]: [sum#1271]
-Results [3]: [destino#799, fecha#815, sum#1272]
+Input [3]: [destino#829, viajes#839, fecha#845]
+Keys [2]: [destino#829, fecha#845]
+Functions [1]: [partial_sum(viajes#839)]
+Aggregate Attributes [1]: [sum#1301]
+Results [3]: [destino#829, fecha#845, sum#1302]
 
 (7) Exchange
-Input [3]: [destino#799, fecha#815, sum#1272]
-Arguments: hashpartitioning(destino#799, fecha#815, 32), ENSURE_REQUIREMENTS, [plan_id=4166]
+Input [3]: [destino#829, fecha#845, sum#1302]
+Arguments: hashpartitioning(destino#829, fecha#845, 32), ENSURE_REQUIREMENTS, [plan_id=4167]
 
 (8) HashAggregate
-Input [3]: [destino#799, fecha#815, sum#1272]
-Keys [2]: [destino#799, fecha#815]
-Functions [1]: [sum(viajes#809)]
-Aggregate Attributes [1]: [sum(viajes#809)#1263]
-Results [3]: [destino#799, fecha#815, sum(viajes#809)#1263 AS viajes_dia#1243]
+Input [3]: [destino#829, fecha#845, sum#1302]
+Keys [2]: [destino#829, fecha#845]
+Functions [1]: [sum(viajes#839)]
+Aggregate Attributes [1]: [sum(viajes#839)#1293]
+Results [3]: [destino#829, fecha#845, sum(viajes#839)#1293 AS viajes_dia#1273]
 
 (9) Exchange
-Input [3]: [destino#799, fecha#815, viajes_dia#1243]
-Arguments: hashpartitioning(destino#799, 32), ENSURE_REQUIREMENTS, [plan_id=4169]
+Input [3]: [destino#829, fecha#845, viajes_dia#1273]
+Arguments: hashpartitioning(destino#829, 32), ENSURE_REQUIREMENTS, [plan_id=4170]
 
 (10) Sort
-Input [3]: [destino#799, fecha#815, viajes_dia#1243]
-Arguments: [destino#799 ASC NULLS FIRST], false, 0
+Input [3]: [destino#829, fecha#845, viajes_dia#1273]
+Arguments: [destino#829 ASC NULLS FIRST], false, 0
 
 (11) Window
-Input [3]: [destino#799, fecha#815, viajes_dia#1243]
-Arguments: [avg(viajes_dia#1243) windowspecdefinition(destino#799, specifiedwindowframe(RowFrame, unboundedpreceding$(), unboundedfollowing$())) AS media_semana#1264], [destino#799]
+Input [3]: [destino#829, fecha#845, viajes_dia#1273]
+Arguments: [avg(viajes_dia#1273) windowspecdefinition(destino#829, specifiedwindowframe(RowFrame, unboundedpreceding$(), unboundedfollowing$())) AS media_semana#1294], [destino#829]
 
 (12) Project
-Output [5]: [destino#799, fecha#815, viajes_dia#1243, media_semana#1264, round((((viajes_dia#1243 / media_semana#1264) - 1.0) * 100.0), 1) AS desviacion_pct#1266]
-Input [4]: [destino#799, fecha#815, viajes_dia#1243, media_semana#1264]
+Output [5]: [destino#829, fecha#845, viajes_dia#1273, media_semana#1294, round((((viajes_dia#1273 / media_semana#1294) - 1.0) * 100.0), 1) AS desviacion_pct#1296]
+Input [4]: [destino#829, fecha#845, viajes_dia#1273, media_semana#1294]
 
 (13) Sort
-Input [5]: [destino#799, fecha#815, viajes_dia#1243, media_semana#1264, desviacion_pct#1266]
-Arguments: [destino#799 ASC NULLS FIRST, fecha#815 ASC NULLS FIRST], false, 0
+Input [5]: [destino#829, fecha#845, viajes_dia#1273, media_semana#1294, desviacion_pct#1296]
+Arguments: [destino#829 ASC NULLS FIRST, fecha#845 ASC NULLS FIRST], false, 0
 
 (14) Window
-Input [5]: [destino#799, fecha#815, viajes_dia#1243, media_semana#1264, desviacion_pct#1266]
-Arguments: [lag(viajes_dia#1243, -1, null) windowspecdefinition(destino#799, fecha#815 ASC NULLS FIRST, specifiedwindowframe(RowFrame, -1, -1)) AS dia_anterior#1267], [destino#799], [fecha#815 ASC NULLS FIRST]
+Input [5]: [destino#829, fecha#845, viajes_dia#1273, media_semana#1294, desviacion_pct#1296]
+Arguments: [lag(viajes_dia#1273, -1, null) windowspecdefinition(destino#829, fecha#845 ASC NULLS FIRST, specifiedwindowframe(RowFrame, -1, -1)) AS dia_anterior#1297], [destino#829], [fecha#845 ASC NULLS FIRST]
 
 (15) Filter
-Input [6]: [destino#799, fecha#815, viajes_dia#1243, media_semana#1264, desviacion_pct#1266, dia_anterior#1267]
-Condition : (isnotnull(media_semana#1264) AND (media_semana#1264 >= 20000.0))
+Input [6]: [destino#829, fecha#845, viajes_dia#1273, media_semana#1294, desviacion_pct#1296, dia_anterior#1297]
+Condition : (isnotnull(media_semana#1294) AND (media_semana#1294 >= 20000.0))
 
 (16) Project
-Output [6]: [destino#799, fecha#815, viajes_dia#1243, media_semana#1264, desviacion_pct#1266, round((((viajes_dia#1243 / dia_anterior#1267) - 1.0) * 100.0), 1) AS variacion_dia_anterior_pct#1268]
-Input [6]: [destino#799, fecha#815, viajes_dia#1243, media_semana#1264, desviacion_pct#1266, dia_anterior#1267]
+Output [6]: [destino#829, fecha#845, viajes_dia#1273, media_semana#1294, desviacion_pct#1296, round((((viajes_dia#1273 / dia_anterior#1297) - 1.0) * 100.0), 1) AS variacion_dia_anterior_pct#1298]
+Input [6]: [destino#829, fecha#845, viajes_dia#1273, media_semana#1294, desviacion_pct#1296, dia_anterior#1297]
 
 (17) Scan csv 
-Output [2]: [ID#860, name#861]
+Output [2]: [ID#890, name#891]
 Batched: false
 Location: InMemoryFileIndex [hdfs://namenode:9000/raw/mitma/municipios]
 PushedFilters: [IsNotNull(ID)]
 ReadSchema: struct<ID:string,name:string>
 
 (18) Filter
-Input [2]: [ID#860, name#861]
-Condition : isnotnull(ID#860)
+Input [2]: [ID#890, name#891]
+Condition : isnotnull(ID#890)
 
 (19) Project
-Output [2]: [ID#860 AS id_municipio#862, name#861 AS nombre_municipio#863]
-Input [2]: [ID#860, name#861]
+Output [2]: [ID#890 AS id_municipio#892, name#891 AS nombre_municipio#893]
+Input [2]: [ID#890, name#891]
 
 (20) BroadcastExchange
-Input [2]: [id_municipio#862, nombre_municipio#863]
-Arguments: HashedRelationBroadcastMode(List(input[0, string, true]),false), [plan_id=4179]
+Input [2]: [id_municipio#892, nombre_municipio#893]
+Arguments: HashedRelationBroadcastMode(List(input[0, string, true]),false), [plan_id=4180]
 
 (21) BroadcastHashJoin
-Left keys [1]: [destino#799]
-Right keys [1]: [id_municipio#862]
+Left keys [1]: [destino#829]
+Right keys [1]: [id_municipio#892]
 Join type: LeftOuter
 Join condition: None
 
 (22) Project
-Output [7]: [fecha#815, destino#799, nombre_municipio#863, round(viajes_dia#1243, 0) AS viajes_dia#1269, round(media_semana#1264, 0) AS media_semana#1270, desviacion_pct#1266, variacion_dia_anterior_pct#1268]
-Input [8]: [destino#799, fecha#815, viajes_dia#1243, media_semana#1264, desviacion_pct#1266, variacion_dia_anterior_pct#1268, id_municipio#862, nombre_municipio#863]
+Output [7]: [fecha#845, destino#829, nombre_municipio#893, round(viajes_dia#1273, 0) AS viajes_dia#1299, round(media_semana#1294, 0) AS media_semana#1300, desviacion_pct#1296, variacion_dia_anterior_pct#1298]
+Input [8]: [destino#829, fecha#845, viajes_dia#1273, media_semana#1294, desviacion_pct#1296, variacion_dia_anterior_pct#1298, id_municipio#892, nombre_municipio#893]
 
 (23) AdaptiveSparkPlan
-Output [7]: [fecha#815, destino#799, nombre_municipio#863, viajes_dia#1269, media_semana#1270, desviacion_pct#1266, variacion_dia_anterior_pct#1268]
+Output [7]: [fecha#845, destino#829, nombre_municipio#893, viajes_dia#1299, media_semana#1300, desviacion_pct#1296, variacion_dia_anterior_pct#1298]
 Arguments: isFinalPlan=false
 
 (24) AdaptiveSparkPlan
-Output [7]: [fecha#815, destino#799, nombre_municipio#863, viajes_dia#1269, media_semana#1270, desviacion_pct#1266, variacion_dia_anterior_pct#1268]
+Output [7]: [fecha#845, destino#829, nombre_municipio#893, viajes_dia#1299, media_semana#1300, desviacion_pct#1296, variacion_dia_anterior_pct#1298]
 Arguments: isFinalPlan=false
 
 

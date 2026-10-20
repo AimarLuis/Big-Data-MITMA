@@ -1,10 +1,10 @@
 Configured Capacity: 2162202353664 (1.97 TB)
-Present Capacity: 2005584282827 (1.82 TB)
-DFS Remaining: 1982317953024 (1.80 TB)
-DFS Used: 23266329803 (21.67 GB)
+Present Capacity: 2005545142640 (1.82 TB)
+DFS Remaining: 1982273912832 (1.80 TB)
+DFS Used: 23271229808 (21.67 GB)
 DFS Used%: 1.16%
 Replicated Blocks:
-	Under replicated blocks: 9
+	Under replicated blocks: 11
 	Blocks with corrupt replicas: 0
 	Missing blocks: 0
 	Missing blocks (with replication factor 1): 0
@@ -24,9 +24,9 @@ Name: 172.19.0.4:9866 (datanode2.big-data-mitma_default)
 Hostname: 213be4e98d8e
 Decommission Status : Normal
 Configured Capacity: 1081101176832 (1006.85 GB)
-DFS Used: 11633276726 (10.83 GB)
-Non DFS Used: 23316568266 (21.72 GB)
-DFS Remaining: 991158976512 (923.09 GB)
+DFS Used: 11635600568 (10.84 GB)
+Non DFS Used: 23336248136 (21.73 GB)
+DFS Remaining: 991136972800 (923.07 GB)
 DFS Used%: 1.08%
 DFS Remaining%: 91.68%
 Configured Cache Capacity: 0 (0 B)
@@ -35,18 +35,18 @@ Cache Remaining: 0 (0 B)
 Cache Used%: 100.00%
 Cache Remaining%: 0.00%
 Xceivers: 1
-Last contact: Tue Oct 20 18:53:55 UTC 2026
-Last Block Report: Tue Oct 20 18:09:27 UTC 2026
-Num of Blocks: 1736
+Last contact: Tue Oct 20 20:08:37 UTC 2026
+Last Block Report: Tue Oct 20 19:06:22 UTC 2026
+Num of Blocks: 1742
 
 
 Name: 172.19.0.6:9866 (datanode1.big-data-mitma_default)
 Hostname: 9e81a47250ce
 Decommission Status : Normal
 Configured Capacity: 1081101176832 (1006.85 GB)
-DFS Used: 11633053077 (10.83 GB)
-Non DFS Used: 23316791915 (21.72 GB)
-DFS Remaining: 991158976512 (923.09 GB)
+DFS Used: 11635629240 (10.84 GB)
+Non DFS Used: 23336252232 (21.73 GB)
+DFS Remaining: 991136940032 (923.07 GB)
 DFS Used%: 1.08%
 DFS Remaining%: 91.68%
 Configured Cache Capacity: 0 (0 B)
@@ -55,8 +55,8 @@ Cache Remaining: 0 (0 B)
 Cache Used%: 100.00%
 Cache Remaining%: 0.00%
 Xceivers: 1
-Last contact: Tue Oct 20 18:53:57 UTC 2026
+Last contact: Tue Oct 20 20:08:37 UTC 2026
 Last Block Report: Tue Oct 20 18:09:27 UTC 2026
-Num of Blocks: 1736
+Num of Blocks: 1742
 
 

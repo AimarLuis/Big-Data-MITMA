@@ -1,5 +1,5 @@
 Connecting to namenode via http://namenode:9870/fsck?ugi=root&files=1&blocks=1&locations=1&path=%2Fraw%2Fmitma%2Fviajes%2F20221101_Viajes_municipios.csv
-FSCK started by root (auth:SIMPLE) from /172.19.0.5 for path /raw/mitma/viajes/20221101_Viajes_municipios.csv at Tue Oct 20 18:53:54 UTC 2026
+FSCK started by root (auth:SIMPLE) from /172.19.0.5 for path /raw/mitma/viajes/20221101_Viajes_municipios.csv at Tue Oct 20 20:08:34 UTC 2026
 /raw/mitma/viajes/20221101_Viajes_municipios.csv 868895935 bytes, replicated: replication=2, 7 block(s):  OK
 0. BP-596694456-172.19.0.5-1792511922120:blk_1073741877_1053 len=134217728 Live_repl=2  [DatanodeInfoWithStorage[172.19.0.4:9866,DS-70649b27-9ce6-444c-8a17-78081d5dbe08,DISK], DatanodeInfoWithStorage[172.19.0.6:9866,DS-13b5d429-3484-496c-b436-31335bdb2d4f,DISK]]
 1. BP-596694456-172.19.0.5-1792511922120:blk_1073741878_1054 len=134217728 Live_repl=2  [DatanodeInfoWithStorage[172.19.0.4:9866,DS-70649b27-9ce6-444c-8a17-78081d5dbe08,DISK], DatanodeInfoWithStorage[172.19.0.6:9866,DS-13b5d429-3484-496c-b436-31335bdb2d4f,DISK]]
@@ -42,7 +42,7 @@ Erasure Coded Block Groups:
  Missing block groups:		0
  Corrupt block groups:		0
  Missing internal blocks:	0
-FSCK ended at Tue Oct 20 18:53:54 UTC 2026 in 9 milliseconds
+FSCK ended at Tue Oct 20 20:08:34 UTC 2026 in 10 milliseconds
 
 
 The filesystem under path '/raw/mitma/viajes/20221101_Viajes_municipios.csv' is HEALTHY
