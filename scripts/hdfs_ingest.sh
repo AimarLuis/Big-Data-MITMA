@@ -9,8 +9,10 @@
 set -euo pipefail
 cd /opt/project
 set -a; source config/pipeline.env; set +a
+log() { echo "[$(date +%H:%M:%S)] $*"; }
+SUBIDOS=0; SALTADOS=0
 
-echo ">> Esperando a que el NameNode salga del modo seguro"
+log ">> Esperando a que el NameNode salga del modo seguro"
 hdfs dfsadmin -safemode wait
 
 hdfs dfs -mkdir -p "$RAW_VIAJES" "$RAW_MUNICIPIOS" "$RAW_AUX" "$RESULTS" "$TMP_GZ" "$(dirname "$CURATED")"
@@ -19,22 +21,28 @@ put_if_new() {          # put_if_new <fichero local> <carpeta HDFS>
   local src="$1" dst="$2/$(basename "$1")"
   if hdfs dfs -test -e "$dst"; then
     if [ "$(hdfs dfs -stat %b "$dst")" = "$(stat -c %s "$src")" ]; then
-      echo "   = $(basename "$src") (ya está en HDFS)"; return 0
+      echo "   = $(basename "$src") (ya está en HDFS)"; SALTADOS=$((SALTADOS + 1)); return 0
     fi
   fi
   echo "   + $(basename "$src") -> $2"
   hdfs dfs -put -f "$src" "$2/"
+  SUBIDOS=$((SUBIDOS + 1))
 }
 
-echo ">> Viajes (7 CSV diarios)"
+log ">> Viajes (7 CSV diarios)"
 for f in "$LOCAL_VIAJES"/*.csv; do put_if_new "$f" "$RAW_VIAJES"; done
-echo ">> Tabla auxiliar de municipios (zonificación MITMA)"
+log ">> Tabla auxiliar de municipios (zonificación MITMA)"
 for f in "$LOCAL_MUNICIPIOS"/*.csv; do put_if_new "$f" "$RAW_MUNICIPIOS"; done
-echo ">> Tablas auxiliares construidas por el equipo (provincias, calendario)"
+log ">> Tablas auxiliares construidas por el equipo (provincias, calendario)"
 for f in "$LOCAL_AUX"/*.csv; do put_if_new "$f" "$RAW_AUX"; done
-echo ">> Un .csv.gz original, solo para medir el problema de gzip (B.2) -> $TMP_GZ"
+log ">> Un .csv.gz original, solo para medir el problema de gzip (B.2) -> $TMP_GZ"
 GZ=$(ls "$LOCAL_DOWNLOADS"/*.csv.gz 2>/dev/null | head -1 || true)
 if [ -n "$GZ" ]; then put_if_new "$GZ" "$TMP_GZ"; else echo "   (no hay .gz en $LOCAL_DOWNLOADS: se omite)"; fi
 
 hdfs dfs -ls -R /raw > "$EVIDENCIAS/hdfs_raw_ls.txt"
-echo ">> Ingesta terminada. Listado en $EVIDENCIAS/hdfs_raw_ls.txt"
+log ">> Ingesta terminada: $SUBIDOS fichero(s) subido(s), $SALTADOS ya estaban (idempotente)"
+log "   zona raw en HDFS (ficheros, tamaño, tamaño con réplicas):"
+echo "   viajes:     $(hdfs dfs -count "$RAW_VIAJES" | awk '{print $2}') ficheros | $(hdfs dfs -du -s -h "$RAW_VIAJES" | awk '{print $1" "$2" | "$3" "$4}')"
+echo "   municipios: $(hdfs dfs -count "$RAW_MUNICIPIOS" | awk '{print $2}') fichero(s) | $(hdfs dfs -du -s -h "$RAW_MUNICIPIOS" | awk '{print $1" "$2}')"
+echo "   auxiliares: $(hdfs dfs -count "$RAW_AUX" | awk '{print $2}') ficheros"
+echo "   listado completo en $EVIDENCIAS/hdfs_raw_ls.txt"

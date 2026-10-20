@@ -19,6 +19,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]      # raíz del repo (/home/jovyan/work en el contenedor)
 
 
+def log(msg):
+    """Línea de log con la hora: [19:42:07] msg. flush=True para que salga al momento por la
+    consola del punto de entrada (docker exec no espera a que termine el proceso)."""
+    print(f"[{dt.datetime.now():%H:%M:%S}] {msg}", flush=True)
+
+
 # ----------------------------------------------------------------------------- configuración
 def load_config(path=None):
     """Lee config/pipeline.env (formato CLAVE="valor") y devuelve un diccionario CONFIG.
@@ -72,7 +78,7 @@ def get_spark(cfg, app_name="mitma-pipeline"):
 
 # ----------------------------------------------------------------------------- evidencias
 class Evidence:
-    """Todo lo que el documento cita queda en evidencias/ (regla: lo que no se reproduce no puntúa).
+    """Todo lo que el documento cita queda en evidencias/, para que cada cifra se pueda reproducir.
 
     - metrics.json: un diccionario de métricas. Cada ejecución sobrescribe las mismas claves.
     - runs.csv: una línea por ejecución de la ETL (historial para demostrar la idempotencia).
@@ -91,7 +97,10 @@ class Evidence:
         self.metrics[key] = value
         self.metrics_path.write_text(json.dumps(self.metrics, indent=2, ensure_ascii=False, default=str),
                                      encoding="utf-8")
-        print(f"   [evidencia] {key} = {json.dumps(value, ensure_ascii=False, default=str)[:300]}")
+        # Cada métrica se muestra por consola en cuanto se calcula, en formato legible (resumen.py)
+        from resumen import lineas
+        for linea in lineas(key, value):
+            log("   " + linea)
 
     def append_run(self, row):
         path = self.dir / "runs.csv"
