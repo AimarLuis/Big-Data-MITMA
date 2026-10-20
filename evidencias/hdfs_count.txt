@@ -1,3 +1,3 @@
            1            7         6871662808 /raw/mitma/viajes
-           8            7          991729353 /curated/mitma/viajes
-          25         1634         3539610577 /tmp/mitma_smallfiles
+           8            7          992253641 /curated/mitma/viajes
+          25         1634         3539332130 /tmp/mitma_smallfiles
