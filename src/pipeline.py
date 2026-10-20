@@ -13,7 +13,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import analytics, challenge, etl, formats, ml, mr_rdd       # noqa: E402
-from common import Evidence, get_spark, hdfs, load_config  # noqa: E402
+from common import Evidence, get_spark, hdfs, load_config, log  # noqa: E402
 
 
 def smoke(spark, cfg, ev):
@@ -27,6 +27,14 @@ def smoke(spark, cfg, ev):
     assert n == 5, "HDFS no devuelve lo que se ha escrito"
 
 
+TITULOS = {"smoke": "A.3 · smoke test: Spark <-> HDFS",
+           "etl": "D.1 · ETL raw -> curated con controles de calidad",
+           "formats": "B.2 · CSV frente a Parquet y el problema de gzip",
+           "analytics": "D.2 · preguntas P1-P3 y D.3 · optimización del join",
+           "mr_rdd": "C · la agregación de MapReduce con RDDs",
+           "ml": "E.3 · regresión lineal con MLlib",
+           "challenge": "F.3 · desafío: archivos pequeños"}
+
 STAGES = {"smoke": smoke, "etl": etl.run, "formats": formats.run, "analytics": analytics.run,
           "mr_rdd": mr_rdd.run, "ml": ml.run, "challenge": challenge.run}
 
@@ -39,10 +47,11 @@ def main():
     cfg = load_config()
     ev = Evidence(cfg)
     spark = get_spark(cfg)
-    print(f">> Spark UI: {spark.sparkContext.uiWebUrl}  (desde tu navegador: http://localhost:4040)")
+    log(f"SparkSession creada (master {spark.sparkContext.master}). Spark UI: http://localhost:4040")
     try:
         for name in args.stages:
-            print(f"\n=== {name} ===")
+            print(flush=True)
+            log(f"=== {name.upper()} · {TITULOS[name]} ===")
             t = time.time()
             STAGES[name](spark, cfg, ev)
             ev.record(f"tiempo_etapa_{name}_s", round(time.time() - t, 1))

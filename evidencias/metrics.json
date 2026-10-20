@@ -6,7 +6,11 @@
     "spark_version": "4.2.0",
     "python": "3.13.15"
   },
+<<<<<<< HEAD
   "tiempo_etapa_smoke_s": 6.1,
+=======
+  "tiempo_etapa_smoke_s": 7.1,
+>>>>>>> 6d8c3db36bbfa3d6681d8e39e231641e8409b21c
   "etl_1_entrada": {
     "filas_raw": 78340906,
     "filas_validas": 78340906,
@@ -307,7 +311,11 @@
       "25-45": -0.2018
     }
   },
+<<<<<<< HEAD
   "tiempo_etapa_ml_s": 32.6,
+=======
+  "tiempo_etapa_ml_s": 26.3,
+>>>>>>> 6d8c3db36bbfa3d6681d8e39e231641e8409b21c
   "f3_archivos_pequenos": {
     "1_shuffle_200_por_defecto": {
       "ficheros": 1400,

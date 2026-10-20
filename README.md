@@ -44,7 +44,16 @@ Un único comando ejecuta todo el flujo: descarga → HDFS → Spark → MapRedu
 ./run_pipeline.sh                 # Linux / macOS
 ```
 
-Si PowerShell bloquea el script, ejecuta `powershell -ExecutionPolicy Bypass -File .\run_pipeline.ps1`, o haz doble clic en `run_pipeline.cmd`, que hace exactamente eso. Toda la salida queda también en `evidencias/pipeline_run.log`.
+Si PowerShell bloquea el script, ejecuta `powershell -ExecutionPolicy Bypass -File .\run_pipeline.ps1`, o haz doble clic en `run_pipeline.cmd`, que hace exactamente eso.
+
+Mientras se ejecuta, cada paso muestra por consola, con la hora, las métricas que va calculando: filas de raw y curated, cuarentena, tamaños y tiempos CSV/Parquet, resultados de P1–P3, contadores de MapReduce, métricas del modelo, `fsck`… Al terminar imprime el tiempo de cada paso y un **resumen de métricas por apartado** (`src/resumen.py`, que se puede volver a lanzar en cualquier momento con `docker exec jupyter python /home/jovyan/work/src/resumen.py`). Toda la salida queda también en `evidencias/pipeline_run.log`, y los tiempos por paso en `evidencias/tiempos_pasos.csv`.
+
+Para repetir solo algunos pasos (con el entorno ya levantado):
+
+```powershell
+.\run_pipeline.ps1 -Pasos 3,5     # Windows
+./run_pipeline.sh 3 5             # Linux / macOS
+```
 
 Con datos descargados, la primera ejecución tarda unos 40–60 minutos en un portátil. La descarga añade unos 900 MB comprimidos. Se puede volver a ejecutar las veces que se quiera: el pipeline es **idempotente**.
 
@@ -66,6 +75,7 @@ Con datos descargados, la primera ejecución tarda unos 40–60 minutos en un po
 | 4 | `namenode` → YARN | `scripts/mr_streaming.sh`: **MapReduce** con Hadoop Streaming (`mapreduce/mapper.py`, `reducer.py`) |
 | 5 | `jupyter` → cluster Spark | `src/pipeline.py`: la misma agregación con **RDDs**, **ML** (MLlib) y **desafío F** |
 | 6 | `namenode` | `scripts/hdfs_evidence.sh`: `ls -R`, `du`, `count`, `fsck` |
+| 7 | `jupyter` | `src/resumen.py`: tiempo de cada paso y resumen de métricas por apartado |
 
 Para ejecutar etapas sueltas de Spark:
 
@@ -97,6 +107,7 @@ Cifras de referencia de una ejecución completa. Los conteos son deterministas; 
 | HDFS `/results/mitma/` | Resultados de las preguntas, MapReduce y ML (CSV) |
 | `evidencias/metrics.json` | Todas las cifras del documento (conteos, tiempos, métricas) |
 | `evidencias/runs.csv` | Una línea por ejecución de la ETL: mismos conteos en cada una (idempotencia) |
+| `evidencias/pipeline_run.log`, `tiempos_pasos.csv` | Salida completa de la última ejecución y duración de cada paso |
 | `evidencias/resultados/` | Resultados de P1–P3, MapReduce/RDD y predicciones del modelo |
 | `evidencias/plan_*.txt` | Planes de ejecución (`explain`) |
 | `evidencias/fsck_*.txt`, `hdfs_*.txt` | Bloques, réplicas y estructura de HDFS |
@@ -111,7 +122,7 @@ hadoop.env               Configuración de Hadoop (la del curso, con YARN reduci
 docker/nodemanager/      NodeManager del curso + python3 (para Hadoop Streaming)
 run_pipeline.ps1 / .sh   Punto de entrada único
 scripts/                 Descarga, ingesta HDFS, MapReduce, evidencias, lanzador de PySpark
-src/                     Código Spark: etl, formats, analytics, mr_rdd, ml, challenge, pipeline
+src/                     Código Spark: etl, formats, analytics, mr_rdd, ml, challenge, pipeline (+ resumen de métricas)
 mapreduce/               mapper.py y reducer.py (Hadoop Streaming)
 data_aux/                Tablas auxiliares construidas: provincias (INE) y calendario (festivos)
 evidencias/              Salidas del pipeline que respaldan el documento
