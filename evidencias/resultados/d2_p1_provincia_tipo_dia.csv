@@ -1,0 +1,53 @@
+provincia,ccaa,media_laborable,media_fin_de_semana,festivo_1_nov,finde_vs_laborable_pct,festivo_vs_laborable_pct
+Madrid,Comunidad de Madrid,20426994.0,15875373.0,14986665.0,-22.3,-26.6
+Barcelona,Cataluña,17751202.0,13990594.0,12780486.0,-21.2,-28.0
+Valencia/València,Comunitat Valenciana,7429863.0,6006807.0,5498337.0,-19.2,-26.0
+Alicante/Alacant,Comunitat Valenciana,5748759.0,4862469.0,4509760.0,-15.4,-21.6
+Sevilla,Andalucía,5410269.0,4341207.0,4179734.0,-19.8,-22.7
+Málaga,Andalucía,5214556.0,4293207.0,4194293.0,-17.7,-19.6
+Murcia,Región de Murcia,4713771.0,3889583.0,3711611.0,-17.5,-21.3
+Illes Balears,Illes Balears,3755222.0,3114687.0,2856554.0,-17.1,-23.9
+Las Palmas,Canarias,3733070.0,3110191.0,2982166.0,-16.7,-20.1
+Cádiz,Andalucía,3684710.0,3120696.0,3024390.0,-15.3,-17.9
+Santa Cruz de Tenerife,Canarias,3591534.0,3013213.0,2895285.0,-16.1,-19.4
+A Coruña,Galicia,3424967.0,2854347.0,2573778.0,-16.7,-24.9
+Bizkaia,País Vasco,3408900.0,2638826.0,2443666.0,-22.6,-28.3
+Pontevedra,Galicia,3035229.0,2664725.0,2429303.0,-12.2,-20.0
+Asturias,Principado de Asturias,2882991.0,2351799.0,2276735.0,-18.4,-21.0
+Zaragoza,Aragón,2643301.0,2026831.0,1981206.0,-23.3,-25.0
+Granada,Andalucía,2596995.0,2201820.0,2120777.0,-15.2,-18.3
+Tarragona,Cataluña,2497309.0,2188774.0,2032209.0,-12.4,-18.6
+Girona,Cataluña,2405228.0,2185571.0,2015005.0,-9.1,-16.2
+Almería,Andalucía,2092420.0,1728798.0,1663278.0,-17.4,-20.5
+Gipuzkoa,País Vasco,2053554.0,1622387.0,1515238.0,-21.0,-26.2
+Córdoba,Andalucía,2047882.0,1700219.0,1637207.0,-17.0,-20.1
+Navarra,Comunidad Foral de Navarra,1812617.0,1484496.0,1378212.0,-18.1,-24.0
+Cantabria,Cantabria,1785665.0,1564506.0,1465460.0,-12.4,-17.9
+Toledo,Castilla-La Mancha,1720290.0,1470684.0,1360747.0,-14.5,-20.9
+Castellón/Castelló,Comunitat Valenciana,1694212.0,1405339.0,1308848.0,-17.1,-22.7
+Valladolid,Castilla y León,1497650.0,1156242.0,1090023.0,-22.8,-27.2
+Badajoz,Extremadura,1484299.0,1224762.0,1143448.0,-17.5,-23.0
+Jaén,Andalucía,1318104.0,1093856.0,1059699.0,-17.0,-19.6
+Huelva,Andalucía,1304170.0,1132693.0,1071673.0,-13.1,-17.8
+León,Castilla y León,1193358.0,1015630.0,982735.0,-14.9,-17.6
+Lleida,Cataluña,1171722.0,982106.0,897684.0,-16.2,-23.4
+Ciudad Real,Castilla-La Mancha,1085216.0,908526.0,845848.0,-16.3,-22.1
+Albacete,Castilla-La Mancha,968828.0,748362.0,717673.0,-22.8,-25.9
+Araba/Álava,País Vasco,963661.0,740547.0,682552.0,-23.2,-29.2
+Burgos,Castilla y León,911238.0,751931.0,715463.0,-17.5,-21.5
+Ourense,Galicia,903054.0,781887.0,771149.0,-13.4,-14.6
+La Rioja,La Rioja,874767.0,733728.0,675052.0,-16.1,-22.8
+Lugo,Galicia,871916.0,754324.0,714051.0,-13.5,-18.1
+Salamanca,Castilla y León,833078.0,673696.0,644074.0,-19.1,-22.7
+Cáceres,Extremadura,803637.0,688731.0,647500.0,-14.3,-19.4
+Guadalajara,Castilla-La Mancha,658943.0,531780.0,510307.0,-19.3,-22.6
+Huesca,Aragón,570506.0,512965.0,483237.0,-10.1,-15.3
+Palencia,Castilla y León,386099.0,315043.0,310142.0,-18.4,-19.7
+Segovia,Castilla y León,378288.0,348821.0,331864.0,-7.8,-12.3
+Cuenca,Castilla-La Mancha,377193.0,332803.0,325193.0,-11.8,-13.8
+Zamora,Castilla y León,372542.0,321205.0,306318.0,-13.8,-17.8
+Ávila,Castilla y León,365194.0,357418.0,348263.0,-2.1,-4.6
+Melilla,Melilla,281097.0,226177.0,202048.0,-19.5,-28.1
+Teruel,Aragón,260640.0,236011.0,222730.0,-9.4,-14.5
+Ceuta,Ceuta,253228.0,195183.0,196656.0,-22.9,-22.3
+Soria,Castilla y León,200145.0,184070.0,170761.0,-8.0,-14.7

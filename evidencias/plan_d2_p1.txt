@@ -1,0 +1,149 @@
+== Physical Plan ==
+AdaptiveSparkPlan (24)
++- Sort (23)
+   +- Exchange (22)
+      +- Project (21)
+         +- HashAggregate (20)
+            +- Exchange (19)
+               +- HashAggregate (18)
+                  +- HashAggregate (17)
+                     +- Exchange (16)
+                        +- HashAggregate (15)
+                           +- Project (14)
+                              +- BroadcastHashJoin Inner BuildRight (13)
+                                 :- Project (9)
+                                 :  +- BroadcastHashJoin Inner BuildRight (8)
+                                 :     :- Project (3)
+                                 :     :  +- Filter (2)
+                                 :     :     +- Scan parquet  (1)
+                                 :     +- BroadcastExchange (7)
+                                 :        +- Project (6)
+                                 :           +- Filter (5)
+                                 :              +- Scan csv  (4)
+                                 +- BroadcastExchange (12)
+                                    +- Filter (11)
+                                       +- Scan csv  (10)
+
+
+(1) Scan parquet 
+Output [4]: [viajes#809, origen_extranjero#811, cod_prov_origen#813, fecha#815]
+Batched: true
+Location: InMemoryFileIndex [hdfs://namenode:9000/curated/mitma/viajes]
+PartitionFilters: [isnotnull(fecha#815)]
+PushedFilters: [IsNotNull(origen_extranjero), Not(EqualTo(origen_extranjero,true)), IsNotNull(cod_prov_origen)]
+ReadSchema: struct<viajes:double,origen_extranjero:boolean,cod_prov_origen:string>
+
+(2) Filter
+Input [4]: [viajes#809, origen_extranjero#811, cod_prov_origen#813, fecha#815]
+Condition : ((isnotnull(origen_extranjero#811) AND NOT origen_extranjero#811) AND isnotnull(cod_prov_origen#813))
+
+(3) Project
+Output [3]: [viajes#809, cod_prov_origen#813, fecha#815]
+Input [4]: [viajes#809, origen_extranjero#811, cod_prov_origen#813, fecha#815]
+
+(4) Scan csv 
+Output [2]: [fecha#833, tipo_dia#835]
+Batched: false
+Location: InMemoryFileIndex [hdfs://namenode:9000/raw/mitma/aux/calendario.csv]
+ReadSchema: struct<fecha:string,tipo_dia:string>
+
+(5) Filter
+Input [2]: [fecha#833, tipo_dia#835]
+Condition : isnotnull(cast(fecha#833 as date))
+
+(6) Project
+Output [2]: [cast(fecha#833 as date) AS fecha#838, tipo_dia#835]
+Input [2]: [fecha#833, tipo_dia#835]
+
+(7) BroadcastExchange
+Input [2]: [fecha#838, tipo_dia#835]
+Arguments: HashedRelationBroadcastMode(List(input[0, date, true]),false), [plan_id=1644]
+
+(8) BroadcastHashJoin
+Left keys [1]: [fecha#815]
+Right keys [1]: [fecha#838]
+Join type: Inner
+Join condition: None
+
+(9) Project
+Output [4]: [fecha#815, viajes#809, cod_prov_origen#813, tipo_dia#835]
+Input [5]: [viajes#809, cod_prov_origen#813, fecha#815, fecha#838, tipo_dia#835]
+
+(10) Scan csv 
+Output [3]: [cod_provincia#856, provincia#857, ccaa#858]
+Batched: false
+Location: InMemoryFileIndex [hdfs://namenode:9000/raw/mitma/aux/provincias.csv]
+PushedFilters: [IsNotNull(cod_provincia)]
+ReadSchema: struct<cod_provincia:string,provincia:string,ccaa:string>
+
+(11) Filter
+Input [3]: [cod_provincia#856, provincia#857, ccaa#858]
+Condition : isnotnull(cod_provincia#856)
+
+(12) BroadcastExchange
+Input [3]: [cod_provincia#856, provincia#857, ccaa#858]
+Arguments: HashedRelationBroadcastMode(List(input[0, string, false]),false), [plan_id=1648]
+
+(13) BroadcastHashJoin
+Left keys [1]: [cod_prov_origen#813]
+Right keys [1]: [cod_provincia#856]
+Join type: Inner
+Join condition: None
+
+(14) Project
+Output [5]: [fecha#815, viajes#809, tipo_dia#835, provincia#857, ccaa#858]
+Input [7]: [fecha#815, viajes#809, cod_prov_origen#813, tipo_dia#835, cod_provincia#856, provincia#857, ccaa#858]
+
+(15) HashAggregate
+Input [5]: [fecha#815, viajes#809, tipo_dia#835, provincia#857, ccaa#858]
+Keys [4]: [provincia#857, ccaa#858, fecha#815, tipo_dia#835]
+Functions [1]: [partial_sum(viajes#809)]
+Aggregate Attributes [1]: [sum#919]
+Results [5]: [provincia#857, ccaa#858, fecha#815, tipo_dia#835, sum#920]
+
+(16) Exchange
+Input [5]: [provincia#857, ccaa#858, fecha#815, tipo_dia#835, sum#920]
+Arguments: hashpartitioning(provincia#857, ccaa#858, fecha#815, tipo_dia#835, 32), ENSURE_REQUIREMENTS, [plan_id=1653]
+
+(17) HashAggregate
+Input [5]: [provincia#857, ccaa#858, fecha#815, tipo_dia#835, sum#920]
+Keys [4]: [provincia#857, ccaa#858, fecha#815, tipo_dia#835]
+Functions [1]: [sum(viajes#809)]
+Aggregate Attributes [1]: [sum(viajes#809)#893]
+Results [4]: [provincia#857, ccaa#858, tipo_dia#835, sum(viajes#809)#893 AS viajes_dia#867]
+
+(18) HashAggregate
+Input [4]: [provincia#857, ccaa#858, tipo_dia#835, viajes_dia#867]
+Keys [2]: [provincia#857, ccaa#858]
+Functions [3]: [partial_avg(CASE WHEN (tipo_dia#835 = laborable) THEN viajes_dia#867 END), partial_avg(CASE WHEN (tipo_dia#835 = fin_de_semana) THEN viajes_dia#867 END), partial_avg(CASE WHEN (tipo_dia#835 = festivo) THEN viajes_dia#867 END)]
+Aggregate Attributes [6]: [sum#907, count#908L, sum#909, count#910L, sum#911, count#912L]
+Results [8]: [provincia#857, ccaa#858, sum#913, count#914L, sum#915, count#916L, sum#917, count#918L]
+
+(19) Exchange
+Input [8]: [provincia#857, ccaa#858, sum#913, count#914L, sum#915, count#916L, sum#917, count#918L]
+Arguments: hashpartitioning(provincia#857, ccaa#858, 32), ENSURE_REQUIREMENTS, [plan_id=1657]
+
+(20) HashAggregate
+Input [8]: [provincia#857, ccaa#858, sum#913, count#914L, sum#915, count#916L, sum#917, count#918L]
+Keys [2]: [provincia#857, ccaa#858]
+Functions [3]: [avg(CASE WHEN (tipo_dia#835 = laborable) THEN viajes_dia#867 END), avg(CASE WHEN (tipo_dia#835 = fin_de_semana) THEN viajes_dia#867 END), avg(CASE WHEN (tipo_dia#835 = festivo) THEN viajes_dia#867 END)]
+Aggregate Attributes [3]: [avg(CASE WHEN (tipo_dia#835 = laborable) THEN viajes_dia#867 END)#902, avg(CASE WHEN (tipo_dia#835 = fin_de_semana) THEN viajes_dia#867 END)#903, avg(CASE WHEN (tipo_dia#835 = festivo) THEN viajes_dia#867 END)#904]
+Results [5]: [provincia#857, ccaa#858, round(avg(CASE WHEN (tipo_dia#835 = laborable) THEN viajes_dia#867 END)#902, 0) AS media_laborable#894, round(avg(CASE WHEN (tipo_dia#835 = fin_de_semana) THEN viajes_dia#867 END)#903, 0) AS media_fin_de_semana#895, round(avg(CASE WHEN (tipo_dia#835 = festivo) THEN viajes_dia#867 END)#904, 0) AS festivo_1_nov#896]
+
+(21) Project
+Output [7]: [provincia#857, ccaa#858, media_laborable#894, media_fin_de_semana#895, festivo_1_nov#896, round((((media_fin_de_semana#895 / media_laborable#894) - 1.0) * 100.0), 1) AS finde_vs_laborable_pct#905, round((((festivo_1_nov#896 / media_laborable#894) - 1.0) * 100.0), 1) AS festivo_vs_laborable_pct#906]
+Input [5]: [provincia#857, ccaa#858, media_laborable#894, media_fin_de_semana#895, festivo_1_nov#896]
+
+(22) Exchange
+Input [7]: [provincia#857, ccaa#858, media_laborable#894, media_fin_de_semana#895, festivo_1_nov#896, finde_vs_laborable_pct#905, festivo_vs_laborable_pct#906]
+Arguments: rangepartitioning(media_laborable#894 DESC NULLS LAST, 32), ENSURE_REQUIREMENTS, [plan_id=1661]
+
+(23) Sort
+Input [7]: [provincia#857, ccaa#858, media_laborable#894, media_fin_de_semana#895, festivo_1_nov#896, finde_vs_laborable_pct#905, festivo_vs_laborable_pct#906]
+Arguments: [media_laborable#894 DESC NULLS LAST], true, 0
+
+(24) AdaptiveSparkPlan
+Output [7]: [provincia#857, ccaa#858, media_laborable#894, media_fin_de_semana#895, festivo_1_nov#896, finde_vs_laborable_pct#905, festivo_vs_laborable_pct#906]
+Arguments: isFinalPlan=false
+
+

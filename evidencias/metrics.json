@@ -1,0 +1,371 @@
+{
+  "a3_smoke": {
+    "filas_leidas": 5,
+    "executors": 1,
+    "master": "spark://spark-master:7077",
+    "spark_version": "4.2.0",
+    "python": "3.13.15"
+  },
+  "tiempo_etapa_smoke_s": 6.8,
+  "etl_1_entrada": {
+    "filas_raw": 78340906,
+    "filas_validas": 78340906,
+    "nulos_fecha": 0,
+    "nulos_periodo": 0,
+    "nulos_viajes": 0,
+    "edad_NA": 23674348,
+    "sexo_NA": 40612444,
+    "filas_con_zona_extranjera": 704364,
+    "viajes_raw": 883809802.5855925
+  },
+  "etl_2_cuarentena": {
+    "filas": 0,
+    "proporcion": 0.0,
+    "umbral_detener": 0.01
+  },
+  "etl_3_curated": {
+    "filas_curated": 78340906,
+    "fechas": 7,
+    "viajes_curated": 883809802.5862521,
+    "duplicados_eliminados": 0
+  },
+  "etl_4_tabla_auxiliar": {
+    "municipios_en_tabla": 2618,
+    "claves_repetidas": 0,
+    "origenes_espanoles_distintos": 2563,
+    "origenes_sin_nombre": 0,
+    "accion": "OK"
+  },
+  "tiempo_etapa_etl_s": 779.2,
+  "b2_formatos": {
+    "tamano_csv_bytes": 6871662808,
+    "tamano_parquet_bytes": 991783251,
+    "A_todas_las_filas_2_columnas": {
+      "csv": {
+        "tiempos_s": [
+          41.97,
+          40.5,
+          39.82
+        ],
+        "mediana_s": 40.5
+      },
+      "parquet": {
+        "tiempos_s": [
+          1.72,
+          1.02,
+          1.0
+        ],
+        "mediana_s": 1.02
+      }
+    },
+    "B_un_solo_dia": {
+      "csv": {
+        "tiempos_s": [
+          41.53,
+          40.87,
+          39.39
+        ],
+        "mediana_s": 40.87
+      },
+      "parquet": {
+        "tiempos_s": [
+          1.61,
+          0.94,
+          0.69
+        ],
+        "mediana_s": 0.94
+      }
+    },
+    "particiones_lectura": {
+      "csv_7_dias": 53,
+      "parquet_7_dias": 8
+    },
+    "ratio_tamano": 6.93
+  },
+  "b2_gzip_vs_csv_un_dia": {
+    "particiones_gz": 1,
+    "particiones_csv": 8,
+    "conteo_gz": {
+      "tiempos_s": [
+        3.23
+      ],
+      "mediana_s": 3.23
+    },
+    "conteo_csv": {
+      "tiempos_s": [
+        1.12
+      ],
+      "mediana_s": 1.12
+    }
+  },
+  "tiempo_etapa_formats_s": 256.0,
+  "d2_p1_filas": 52,
+  "d2_p2_filas": 21,
+  "d2_p3_filas": 6174,
+  "d3_optimizacion_broadcast": {
+    "antes_sort_merge": {
+      "tiempos_s": [
+        73.15,
+        45.17,
+        70.44
+      ],
+      "mediana_s": 70.44,
+      "stages_spark_ui": {
+        "stages_ejecutados": 9,
+        "shuffle_write_total_MB": 1210.1,
+        "detalle": [
+          {
+            "stage": 359,
+            "tareas": 1,
+            "lectura_entrada_MB": 0.0,
+            "shuffle_write_MB": 0.0,
+            "shuffle_read_MB": 0.0
+          },
+          {
+            "stage": 360,
+            "tareas": 1,
+            "lectura_entrada_MB": 0.0,
+            "shuffle_write_MB": 0.0,
+            "shuffle_read_MB": 0.0
+          },
+          {
+            "stage": 361,
+            "tareas": 8,
+            "lectura_entrada_MB": 263.6,
+            "shuffle_write_MB": 636.8,
+            "shuffle_read_MB": 0.0
+          },
+          {
+            "stage": 364,
+            "tareas": 6,
+            "lectura_entrada_MB": 0.0,
+            "shuffle_write_MB": 573.3,
+            "shuffle_read_MB": 636.8
+          },
+          {
+            "stage": 369,
+            "tareas": 12,
+            "lectura_entrada_MB": 0.0,
+            "shuffle_write_MB": 0.0,
+            "shuffle_read_MB": 573.3
+          },
+          {
+            "stage": 375,
+            "tareas": 1,
+            "lectura_entrada_MB": 0.0,
+            "shuffle_write_MB": 0.0,
+            "shuffle_read_MB": 0.0
+          },
+          {
+            "stage": 382,
+            "tareas": 1,
+            "lectura_entrada_MB": 0.0,
+            "shuffle_write_MB": 0.0,
+            "shuffle_read_MB": 0.0
+          },
+          {
+            "stage": 389,
+            "tareas": 1,
+            "lectura_entrada_MB": 0.0,
+            "shuffle_write_MB": 0.0,
+            "shuffle_read_MB": 0.0
+          },
+          {
+            "stage": 397,
+            "tareas": 1,
+            "lectura_entrada_MB": 0.0,
+            "shuffle_write_MB": 0.0,
+            "shuffle_read_MB": 0.0
+          }
+        ]
+      }
+    },
+    "despues_broadcast": {
+      "tiempos_s": [
+        9.73,
+        9.44,
+        9.64
+      ],
+      "mediana_s": 9.64,
+      "stages_spark_ui": {
+        "stages_ejecutados": 7,
+        "shuffle_write_total_MB": 0.0,
+        "detalle": [
+          {
+            "stage": 443,
+            "tareas": 1,
+            "lectura_entrada_MB": 0.0,
+            "shuffle_write_MB": 0.0,
+            "shuffle_read_MB": 0.0
+          },
+          {
+            "stage": 444,
+            "tareas": 1,
+            "lectura_entrada_MB": 0.0,
+            "shuffle_write_MB": 0.0,
+            "shuffle_read_MB": 0.0
+          },
+          {
+            "stage": 445,
+            "tareas": 8,
+            "lectura_entrada_MB": 263.6,
+            "shuffle_write_MB": 0.0,
+            "shuffle_read_MB": 0.0
+          },
+          {
+            "stage": 447,
+            "tareas": 1,
+            "lectura_entrada_MB": 0.0,
+            "shuffle_write_MB": 0.0,
+            "shuffle_read_MB": 0.0
+          },
+          {
+            "stage": 450,
+            "tareas": 1,
+            "lectura_entrada_MB": 0.0,
+            "shuffle_write_MB": 0.0,
+            "shuffle_read_MB": 0.0
+          },
+          {
+            "stage": 453,
+            "tareas": 1,
+            "lectura_entrada_MB": 0.0,
+            "shuffle_write_MB": 0.0,
+            "shuffle_read_MB": 0.0
+          },
+          {
+            "stage": 457,
+            "tareas": 1,
+            "lectura_entrada_MB": 0.0,
+            "shuffle_write_MB": 0.0,
+            "shuffle_read_MB": 0.0
+          }
+        ]
+      }
+    },
+    "mejora_pct": 86.3
+  },
+  "tiempo_etapa_analytics_s": 333.8,
+  "c_mapreduce_vs_rdd": {
+    "rdd_tiempo": {
+      "tiempos_s": [
+        59.21,
+        54.65,
+        54.67
+      ],
+      "mediana_s": 54.67
+    },
+    "rdd_claves": 364,
+    "lineas_de_codigo": {
+      "streaming_mapper_mas_reducer": 43,
+      "rdd": 8
+    },
+    "comparacion_con_streaming": {
+      "claves": 364,
+      "claves_solo_en_una_version": 0,
+      "max_diferencia_abs": 0.0005
+    },
+    "streaming_tiempo_ms": 275150
+  },
+  "tiempo_etapa_mr_rdd_s": 227.6,
+  "e3_ml": {
+    "filas": {
+      "total": 12815,
+      "train": 10266,
+      "test": 2549
+    },
+    "municipios_distintos": 2561,
+    "rangos_edad": [
+      "45-65",
+      "NA",
+      "65-100",
+      "0-25",
+      "25-45"
+    ],
+    "n_features": 2568,
+    "objetivo": "log1p(viajes medios diarios por municipio de origen y edad)",
+    "regresion_lineal": {
+      "rmse": 0.6756,
+      "mae": 0.4728,
+      "r2": 0.8243
+    },
+    "baseline_media_global": {
+      "rmse": 1.6118,
+      "mae": 1.322,
+      "r2": -0.0
+    },
+    "baseline_media_municipio": {
+      "rmse": 1.1115,
+      "mae": 0.8352,
+      "r2": 0.5244
+    },
+    "coeficientes_edad": {
+      "45-65": -0.0048,
+      "NA": 1.2369,
+      "65-100": -0.8736,
+      "0-25": -0.163,
+      "25-45": -0.2018
+    }
+  },
+  "tiempo_etapa_ml_s": 41.7,
+  "f3_archivos_pequenos": {
+    "1_shuffle_200_por_defecto": {
+      "ficheros": 1400,
+      "tamano_medio_MB": 0.9,
+      "escritura": {
+        "tiempos_s": [
+          428.67
+        ],
+        "mediana_s": 428.67
+      },
+      "lectura_suma_por_dia": {
+        "tiempos_s": [
+          10.18,
+          5.74,
+          5.59
+        ],
+        "mediana_s": 5.74
+      },
+      "particiones_al_leer": 54
+    },
+    "2_shuffle_32_proyecto": {
+      "ficheros": 224,
+      "tamano_medio_MB": 5.18,
+      "escritura": {
+        "tiempos_s": [
+          467.93
+        ],
+        "mediana_s": 467.93
+      },
+      "lectura_suma_por_dia": {
+        "tiempos_s": [
+          1.95,
+          1.72,
+          1.36
+        ],
+        "mediana_s": 1.72
+      },
+      "particiones_al_leer": 17
+    },
+    "3_repartition_por_fecha": {
+      "ficheros": 7,
+      "tamano_medio_MB": 137.09,
+      "escritura": {
+        "tiempos_s": [
+          286.18
+        ],
+        "mediana_s": 286.18
+      },
+      "lectura_suma_por_dia": {
+        "tiempos_s": [
+          0.88,
+          3.22,
+          0.52
+        ],
+        "mediana_s": 0.88
+      },
+      "particiones_al_leer": 8
+    }
+  },
+  "tiempo_etapa_challenge_s": 1215.2
+}

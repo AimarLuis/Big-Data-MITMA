@@ -1,0 +1,146 @@
+# =============================================================================
+# Entorno Big Data local del proyecto MITMA. Se levanta con UN comando:
+#     docker compose up -d --build
+#
+# Parte Hadoop (HDFS + YARN): el compose del curso (docker-hadoop de big-data-europe, Tema 3)
+#   con 2 DataNodes y replicación 2, como en compose.yaml de clase.
+# Parte Spark: un cluster standalone (master + worker) y el contenedor Jupyter del Tema 4
+#   (quay.io/jupyter/pyspark-notebook), que hace de driver.
+# Todo en la MISMA red de compose: los contenedores se encuentran por nombre (namenode,
+#   spark-master...), sin el "docker network connect" manual del Tema 5.
+# =============================================================================
+
+x-spark-image: &spark_image ${SPARK_IMAGE:-quay.io/jupyter/pyspark-notebook}
+
+services:
+  # ------------------------------------------------------------------ HDFS
+  namenode:
+    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
+    container_name: namenode
+    restart: always
+    ports:
+      - 9870:9870          # UI del NameNode
+      - 9000:9000          # RPC de HDFS (fs.defaultFS)
+    volumes:
+      - hadoop_namenode:/hadoop/dfs/name
+      - ./:/opt/project    # scripts, config, datos locales y evidencias (ingesta, fsck, MapReduce)
+    environment:
+      - CLUSTER_NAME=mitma
+      - HDFS_CONF_dfs_replication=2
+    env_file:
+      - ./hadoop.env
+
+  datanode1:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    container_name: datanode1
+    restart: always
+    volumes:
+      - hadoop_datanode1:/hadoop/dfs/data
+    environment:
+      SERVICE_PRECONDITION: "namenode:9870"
+      HDFS_CONF_dfs_replication: 2
+    env_file:
+      - ./hadoop.env
+
+  datanode2:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    container_name: datanode2
+    restart: always
+    volumes:
+      - hadoop_datanode2:/hadoop/dfs/data
+    environment:
+      SERVICE_PRECONDITION: "namenode:9870"
+      HDFS_CONF_dfs_replication: 2
+    env_file:
+      - ./hadoop.env
+
+  # ------------------------------------------------------------------ YARN (MapReduce)
+  resourcemanager:
+    image: bde2020/hadoop-resourcemanager:2.0.0-hadoop3.2.1-java8
+    container_name: resourcemanager
+    restart: always
+    ports:
+      - 8088:8088          # UI de YARN
+    environment:
+      SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode1:9864 datanode2:9864"
+    env_file:
+      - ./hadoop.env
+
+  nodemanager1:
+    # Imagen del curso + python3: en Hadoop Streaming, mapper.py y reducer.py se ejecutan aquí
+    build: ./docker/nodemanager
+    image: mitma/hadoop-nodemanager-python:3.2.1
+    container_name: nodemanager
+    restart: always
+    environment:
+      SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode1:9864 datanode2:9864 resourcemanager:8088"
+    env_file:
+      - ./hadoop.env
+
+  historyserver:
+    image: bde2020/hadoop-historyserver:2.0.0-hadoop3.2.1-java8
+    container_name: historyserver
+    restart: always
+    environment:
+      SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode1:9864 datanode2:9864 resourcemanager:8088"
+    volumes:
+      - hadoop_historyserver:/hadoop/yarn/timeline
+    env_file:
+      - ./hadoop.env
+
+  # ------------------------------------------------------------------ Spark standalone
+  # Master, worker y Jupyter usan LA MISMA imagen: mismas versiones de Spark y Python en
+  # driver y executors (si no coinciden, PySpark falla en la primera acción).
+  spark-master:
+    image: *spark_image
+    container_name: spark-master
+    hostname: spark-master
+    command: bash -c "exec $$SPARK_HOME/bin/spark-class org.apache.spark.deploy.master.Master --host spark-master --port 7077 --webui-port 8080"
+    ports:
+      - 8080:8080          # UI del master: workers y aplicaciones
+    healthcheck:
+      disable: true        # la imagen trae el healthcheck de Jupyter, que aquí no aplica
+
+  spark-worker:
+    image: *spark_image
+    container_name: spark-worker
+    hostname: spark-worker
+    depends_on:
+      - spark-master
+    command: bash -c "exec $$SPARK_HOME/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077 --cores $${SPARK_WORKER_CORES} --memory $${SPARK_WORKER_MEMORY} --webui-port 8081"
+    ports:
+      - 8081:8081          # UI del worker
+    environment:
+      - SPARK_WORKER_CORES=${SPARK_WORKER_CORES:-4}
+      - SPARK_WORKER_MEMORY=${SPARK_WORKER_MEMORY:-3g}
+      - SPARK_WORKER_DIR=/tmp/spark-worker
+      - HADOOP_USER_NAME=root
+    healthcheck:
+      disable: true
+
+  # ------------------------------------------------------------------ Entorno de desarrollo (driver)
+  jupyter:
+    image: *spark_image
+    container_name: jupyter
+    hostname: jupyter      # los executors vuelven a conectar con el driver por este nombre
+    user: root             # como en el docker run del Tema 4 (--user root + CHOWN_EXTRA)
+    depends_on:
+      - namenode
+      - spark-master
+    ports:
+      - 8888:8888          # Jupyter (token: mitma)
+      - 4040:4040          # Spark UI de la aplicación en curso
+      - 4041:4041          # segunda aplicación (p. ej. un notebook abierto a la vez)
+    environment:
+      - JUPYTER_TOKEN=${JUPYTER_TOKEN:-mitma}
+      - HADOOP_USER_NAME=root
+      - CHOWN_EXTRA=/home/jovyan/work
+      - CHOWN_EXTRA_OPTS=-R
+    volumes:
+      - ./:/home/jovyan/work
+
+volumes:
+  hadoop_namenode:
+  hadoop_datanode1:
+  hadoop_datanode2:
+  hadoop_historyserver:

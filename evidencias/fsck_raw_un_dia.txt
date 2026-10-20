@@ -1,0 +1,48 @@
+Connecting to namenode via http://namenode:9870/fsck?ugi=root&files=1&blocks=1&locations=1&path=%2Fraw%2Fmitma%2Fviajes%2F20221101_Viajes_municipios.csv
+FSCK started by root (auth:SIMPLE) from /172.18.0.2 for path /raw/mitma/viajes/20221101_Viajes_municipios.csv at Tue Oct 20 14:23:36 UTC 2026
+/raw/mitma/viajes/20221101_Viajes_municipios.csv 868895935 bytes, replicated: replication=2, 7 block(s):  OK
+0. BP-477654162-172.18.0.2-1792498840627:blk_1073741877_1053 len=134217728 Live_repl=2  [DatanodeInfoWithStorage[172.18.0.8:9866,DS-a90cfd2f-c197-4646-83b5-c93ad18c1d8c,DISK], DatanodeInfoWithStorage[172.18.0.4:9866,DS-f6d94b4e-924d-4ee3-b267-9d97d0ce765f,DISK]]
+1. BP-477654162-172.18.0.2-1792498840627:blk_1073741878_1054 len=134217728 Live_repl=2  [DatanodeInfoWithStorage[172.18.0.8:9866,DS-a90cfd2f-c197-4646-83b5-c93ad18c1d8c,DISK], DatanodeInfoWithStorage[172.18.0.4:9866,DS-f6d94b4e-924d-4ee3-b267-9d97d0ce765f,DISK]]
+2. BP-477654162-172.18.0.2-1792498840627:blk_1073741879_1055 len=134217728 Live_repl=2  [DatanodeInfoWithStorage[172.18.0.8:9866,DS-a90cfd2f-c197-4646-83b5-c93ad18c1d8c,DISK], DatanodeInfoWithStorage[172.18.0.4:9866,DS-f6d94b4e-924d-4ee3-b267-9d97d0ce765f,DISK]]
+3. BP-477654162-172.18.0.2-1792498840627:blk_1073741880_1056 len=134217728 Live_repl=2  [DatanodeInfoWithStorage[172.18.0.4:9866,DS-f6d94b4e-924d-4ee3-b267-9d97d0ce765f,DISK], DatanodeInfoWithStorage[172.18.0.8:9866,DS-a90cfd2f-c197-4646-83b5-c93ad18c1d8c,DISK]]
+4. BP-477654162-172.18.0.2-1792498840627:blk_1073741881_1057 len=134217728 Live_repl=2  [DatanodeInfoWithStorage[172.18.0.4:9866,DS-f6d94b4e-924d-4ee3-b267-9d97d0ce765f,DISK], DatanodeInfoWithStorage[172.18.0.8:9866,DS-a90cfd2f-c197-4646-83b5-c93ad18c1d8c,DISK]]
+5. BP-477654162-172.18.0.2-1792498840627:blk_1073741882_1058 len=134217728 Live_repl=2  [DatanodeInfoWithStorage[172.18.0.4:9866,DS-f6d94b4e-924d-4ee3-b267-9d97d0ce765f,DISK], DatanodeInfoWithStorage[172.18.0.8:9866,DS-a90cfd2f-c197-4646-83b5-c93ad18c1d8c,DISK]]
+6. BP-477654162-172.18.0.2-1792498840627:blk_1073741883_1059 len=63589567 Live_repl=2  [DatanodeInfoWithStorage[172.18.0.8:9866,DS-a90cfd2f-c197-4646-83b5-c93ad18c1d8c,DISK], DatanodeInfoWithStorage[172.18.0.4:9866,DS-f6d94b4e-924d-4ee3-b267-9d97d0ce765f,DISK]]
+
+
+Status: HEALTHY
+ Number of data-nodes:	2
+ Number of racks:		1
+ Total dirs:			0
+ Total symlinks:		0
+
+Replicated Blocks:
+ Total size:	868895935 B
+ Total files:	1
+ Total blocks (validated):	7 (avg. block size 124127990 B)
+ Minimally replicated blocks:	7 (100.0 %)
+ Over-replicated blocks:	0 (0.0 %)
+ Under-replicated blocks:	0 (0.0 %)
+ Mis-replicated blocks:		0 (0.0 %)
+ Default replication factor:	2
+ Average block replication:	2.0
+ Missing blocks:		0
+ Corrupt blocks:		0
+ Missing replicas:		0 (0.0 %)
+
+Erasure Coded Block Groups:
+ Total size:	0 B
+ Total files:	0
+ Total block groups (validated):	0
+ Minimally erasure-coded block groups:	0
+ Over-erasure-coded block groups:	0
+ Under-erasure-coded block groups:	0
+ Unsatisfactory placement block groups:	0
+ Average block group size:	0.0
+ Missing block groups:		0
+ Corrupt block groups:		0
+ Missing internal blocks:	0
+FSCK ended at Tue Oct 20 14:23:36 UTC 2026 in 21 milliseconds
+
+
+The filesystem under path '/raw/mitma/viajes/20221101_Viajes_municipios.csv' is HEALTHY

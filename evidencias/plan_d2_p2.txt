@@ -1,0 +1,128 @@
+== Physical Plan ==
+AdaptiveSparkPlan (22)
++- Sort (21)
+   +- Exchange (20)
+      +- Project (19)
+         +- BroadcastHashJoin LeftOuter BuildRight (18)
+            :- Filter (13)
+            :  +- Window (12)
+            :     +- WindowGroupLimit (11)
+            :        +- Sort (10)
+            :           +- Exchange (9)
+            :              +- WindowGroupLimit (8)
+            :                 +- Sort (7)
+            :                    +- HashAggregate (6)
+            :                       +- Exchange (5)
+            :                          +- HashAggregate (4)
+            :                             +- Project (3)
+            :                                +- Filter (2)
+            :                                   +- Scan parquet  (1)
+            +- BroadcastExchange (17)
+               +- Project (16)
+                  +- Filter (15)
+                     +- Scan csv  (14)
+
+
+(1) Scan parquet 
+Output [4]: [destino#1087, viajes#1097, destino_extranjero#1100, fecha#1103]
+Batched: true
+Location: InMemoryFileIndex [hdfs://namenode:9000/curated/mitma/viajes]
+PushedFilters: [IsNotNull(destino_extranjero), Not(EqualTo(destino_extranjero,true))]
+ReadSchema: struct<destino:string,viajes:double,destino_extranjero:boolean>
+
+(2) Filter
+Input [4]: [destino#1087, viajes#1097, destino_extranjero#1100, fecha#1103]
+Condition : (isnotnull(destino_extranjero#1100) AND NOT destino_extranjero#1100)
+
+(3) Project
+Output [3]: [destino#1087, viajes#1097, fecha#1103]
+Input [4]: [destino#1087, viajes#1097, destino_extranjero#1100, fecha#1103]
+
+(4) HashAggregate
+Input [3]: [destino#1087, viajes#1097, fecha#1103]
+Keys [2]: [fecha#1103, destino#1087]
+Functions [1]: [partial_sum(viajes#1097)]
+Aggregate Attributes [1]: [sum#1106]
+Results [3]: [fecha#1103, destino#1087, sum#1107]
+
+(5) Exchange
+Input [3]: [fecha#1103, destino#1087, sum#1107]
+Arguments: hashpartitioning(fecha#1103, destino#1087, 32), ENSURE_REQUIREMENTS, [plan_id=2852]
+
+(6) HashAggregate
+Input [3]: [fecha#1103, destino#1087, sum#1107]
+Keys [2]: [fecha#1103, destino#1087]
+Functions [1]: [sum(viajes#1097)]
+Aggregate Attributes [1]: [sum(viajes#1097)#1058]
+Results [3]: [fecha#1103, destino#1087, sum(viajes#1097)#1058 AS viajes_recibidos#1104]
+
+(7) Sort
+Input [3]: [fecha#1103, destino#1087, viajes_recibidos#1104]
+Arguments: [fecha#1103 ASC NULLS FIRST, viajes_recibidos#1104 DESC NULLS LAST], false, 0
+
+(8) WindowGroupLimit
+Input [3]: [fecha#1103, destino#1087, viajes_recibidos#1104]
+Arguments: [fecha#1103], [viajes_recibidos#1104 DESC NULLS LAST], row_number(), 3, Partial
+
+(9) Exchange
+Input [3]: [fecha#1103, destino#1087, viajes_recibidos#1104]
+Arguments: hashpartitioning(fecha#1103, 32), ENSURE_REQUIREMENTS, [plan_id=2858]
+
+(10) Sort
+Input [3]: [fecha#1103, destino#1087, viajes_recibidos#1104]
+Arguments: [fecha#1103 ASC NULLS FIRST, viajes_recibidos#1104 DESC NULLS LAST], false, 0
+
+(11) WindowGroupLimit
+Input [3]: [fecha#1103, destino#1087, viajes_recibidos#1104]
+Arguments: [fecha#1103], [viajes_recibidos#1104 DESC NULLS LAST], row_number(), 3, Final
+
+(12) Window
+Input [3]: [fecha#1103, destino#1087, viajes_recibidos#1104]
+Arguments: [row_number() windowspecdefinition(fecha#1103, viajes_recibidos#1104 DESC NULLS LAST, specifiedwindowframe(RowFrame, unboundedpreceding$(), currentrow$())) AS puesto#1105], [fecha#1103], [viajes_recibidos#1104 DESC NULLS LAST]
+
+(13) Filter
+Input [4]: [fecha#1103, destino#1087, viajes_recibidos#1104, puesto#1105]
+Condition : (puesto#1105 <= 3)
+
+(14) Scan csv 
+Output [2]: [ID#860, name#861]
+Batched: false
+Location: InMemoryFileIndex [hdfs://namenode:9000/raw/mitma/municipios]
+PushedFilters: [IsNotNull(ID)]
+ReadSchema: struct<ID:string,name:string>
+
+(15) Filter
+Input [2]: [ID#860, name#861]
+Condition : isnotnull(ID#860)
+
+(16) Project
+Output [2]: [ID#860 AS id_municipio#862, name#861 AS nombre_municipio#863]
+Input [2]: [ID#860, name#861]
+
+(17) BroadcastExchange
+Input [2]: [id_municipio#862, nombre_municipio#863]
+Arguments: HashedRelationBroadcastMode(List(input[0, string, true]),false), [plan_id=2864]
+
+(18) BroadcastHashJoin
+Left keys [1]: [destino#1087]
+Right keys [1]: [id_municipio#862]
+Join type: LeftOuter
+Join condition: None
+
+(19) Project
+Output [5]: [fecha#1103, puesto#1105, destino#1087, nombre_municipio#863, round(viajes_recibidos#1104, 0) AS viajes_recibidos#1055]
+Input [6]: [fecha#1103, destino#1087, viajes_recibidos#1104, puesto#1105, id_municipio#862, nombre_municipio#863]
+
+(20) Exchange
+Input [5]: [fecha#1103, puesto#1105, destino#1087, nombre_municipio#863, viajes_recibidos#1055]
+Arguments: rangepartitioning(fecha#1103 ASC NULLS FIRST, puesto#1105 ASC NULLS FIRST, 32), ENSURE_REQUIREMENTS, [plan_id=2868]
+
+(21) Sort
+Input [5]: [fecha#1103, puesto#1105, destino#1087, nombre_municipio#863, viajes_recibidos#1055]
+Arguments: [fecha#1103 ASC NULLS FIRST, puesto#1105 ASC NULLS FIRST], true, 0
+
+(22) AdaptiveSparkPlan
+Output [5]: [fecha#1103, puesto#1105, destino#1087, nombre_municipio#863, viajes_recibidos#1055]
+Arguments: isFinalPlan=false
+
+

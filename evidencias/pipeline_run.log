@@ -1,0 +1,54 @@
+**********************
+Inicio de la transcripción de Windows PowerShell
+Hora de inicio: 20261020153007
+**********************
+
+############ 0/7 Levantar el entorno (no hace nada si ya estÃ¡ levantado)
+ => => transferring context: 2B                                                                                    0.0s
+ => [1/2] FROM docker.io/bde2020/hadoop-nodemanager:2.0.0-hadoop3.2.1-java8@sha256:b5515b537a30468a00198610861e02  0.0s
+ => => resolve docker.io/bde2020/hadoop-nodemanager:2.0.0-hadoop3.2.1-java8@sha256:b5515b537a30468a00198610861e02  0.0s
+ => CACHED [2/2] RUN echo "deb [trusted=yes] http://archive.debian.org/debian stretch main" > /etc/apt/sources.li  0.0s
+ => exporting to image                                                                                             0.1s
+ => => exporting layers                                                                                            0.0s
+ => => exporting manifest sha256:15efc750642c7154abb101bd8f2baffec153abeb07afb13671daa6e13c24a3e5                  0.0s
+ => => exporting config sha256:baca79e073f740d1681eec11494b56afca00fd763745ea9d7a222d5bc9cbc9de                    0.0s
+ => => exporting attestation manifest sha256:43b76d0ef35d634a90196932e09bb3cc04267083fb79c9b922f1edca88ebad40      0.0s
+ => => exporting manifest list sha256:d2f415355b9afa4796027cea5925b7eb60aa11dec704f695be58930866d7b6c7             0.0s
+ => => naming to docker.io/mitma/hadoop-nodemanager-python:3.2.1                                                   0.0s
+ => => unpacking to docker.io/mitma/hadoop-nodemanager-python:3.2.1                                                0.0s
+ => resolving provenance for metadata file                                                                         0.0s
+[+] up 10/10
+ ✔ Image mitma/hadoop-nodemanager-python:3.2.1 Built                                                                1.5s
+ ✔ Container datanode2                         Running                                                              0.0s
+ ✔ Container nodemanager                       Running                                                              0.0s
+ ✔ Container jupyter                           Running                                                              0.0s
+ ✔ Container datanode1                         Running                                                              0.0s
+ ✔ Container historyserver                     Running                                                              0.0s
+ ✔ Container spark-worker                      Running                                                              0.0s
+ ✔ Container resourcemanager                   Running                                                              0.0s
+ ✔ Container spark-master                      Running                                                              0.0s
+ ✔ Container namenode                          Running                                                              0.0s
+
+############ 1/7 Descarga reproducible (solo lo que falte)
+
+
+############ 2/7 Ingesta en la zona raw de HDFS
+
+
+############ 3/7 Spark: smoke test, ETL (curated), formatos y preguntas analÃ­ticas
+
+
+############ 4/7 MapReduce con Hadoop Streaming (YARN)
+
+
+############ 5/7 Spark: misma agregaciÃ³n con RDDs, ML y desafÃ­o F
+
+
+############ 6/7 Evidencias de HDFS (ls -R, du, count, fsck)
+
+
+############ 7/7 Fin. MÃ©tricas en evidencias\metrics.json y resultados en evidencias\resultados\
+**********************
+Fin de la transcripción de Windows PowerShell
+Hora de finalización: 20261020162340
+**********************

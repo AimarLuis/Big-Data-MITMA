@@ -1,0 +1,3 @@
+6.4 G    12.8 G  /raw/mitma/viajes
+945.8 M  2.8 G   /curated/mitma/viajes
+1.8 K    5.4 K   /quarantine/mitma/viajes

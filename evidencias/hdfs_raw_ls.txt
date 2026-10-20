@@ -1,0 +1,14 @@
+drwxr-xr-x   - root supergroup          0 2026-10-20 12:20 /raw/mitma
+drwxr-xr-x   - root supergroup          0 2026-10-20 12:30 /raw/mitma/aux
+-rw-r--r--   2 root supergroup        336 2026-10-20 12:30 /raw/mitma/aux/calendario.csv
+-rw-r--r--   2 root supergroup       1380 2026-10-20 12:30 /raw/mitma/aux/provincias.csv
+drwxr-xr-x   - root supergroup          0 2026-10-20 12:30 /raw/mitma/municipios
+-rw-r--r--   2 root supergroup      91538 2026-10-20 12:30 /raw/mitma/municipios/nombres_municipios.csv
+drwxr-xr-x   - root supergroup          0 2026-10-20 12:30 /raw/mitma/viajes
+-rw-r--r--   2 root supergroup 1014578716 2026-10-20 12:22 /raw/mitma/viajes/20221026_Viajes_municipios.csv
+-rw-r--r--   2 root supergroup 1026249052 2026-10-20 12:23 /raw/mitma/viajes/20221027_Viajes_municipios.csv
+-rw-r--r--   2 root supergroup 1070387508 2026-10-20 12:25 /raw/mitma/viajes/20221028_Viajes_municipios.csv
+-rw-r--r--   2 root supergroup  983310195 2026-10-20 12:26 /raw/mitma/viajes/20221029_Viajes_municipios.csv
+-rw-r--r--   2 root supergroup  909235352 2026-10-20 12:27 /raw/mitma/viajes/20221030_Viajes_municipios.csv
+-rw-r--r--   2 root supergroup  999006050 2026-10-20 12:28 /raw/mitma/viajes/20221031_Viajes_municipios.csv
+-rw-r--r--   2 root supergroup  868895935 2026-10-20 12:30 /raw/mitma/viajes/20221101_Viajes_municipios.csv

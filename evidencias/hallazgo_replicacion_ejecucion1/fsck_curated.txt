@@ -1,0 +1,80 @@
+Connecting to namenode via http://namenode:9870/fsck?ugi=root&files=1&blocks=1&locations=1&path=%2Fcurated%2Fmitma%2Fviajes
+FSCK started by root (auth:SIMPLE) from /172.18.0.2 for path /curated/mitma/viajes at Tue Oct 20 13:21:00 UTC 2026
+/curated/mitma/viajes <dir>
+/curated/mitma/viajes/fecha=2022-10-26 <dir>
+/curated/mitma/viajes/fecha=2022-10-26/part-00002-109d3b30-1668-478f-9005-a985d74f59a0.c000.snappy.parquet 145850009 bytes, replicated: replication=3, 2 block(s):  Under replicated BP-477654162-172.18.0.2-1792498840627:blk_1073741897_1073. Target Replicas is 3 but found 2 live replica(s), 0 decommissioned replica(s), 0 decommissioning replica(s).
+ Under replicated BP-477654162-172.18.0.2-1792498840627:blk_1073741900_1076. Target Replicas is 3 but found 2 live replica(s), 0 decommissioned replica(s), 0 decommissioning replica(s).
+0. BP-477654162-172.18.0.2-1792498840627:blk_1073741897_1073 len=134217728 Live_repl=2  [DatanodeInfoWithStorage[172.18.0.4:9866,DS-f6d94b4e-924d-4ee3-b267-9d97d0ce765f,DISK], DatanodeInfoWithStorage[172.18.0.8:9866,DS-a90cfd2f-c197-4646-83b5-c93ad18c1d8c,DISK]]
+1. BP-477654162-172.18.0.2-1792498840627:blk_1073741900_1076 len=11632281 Live_repl=2  [DatanodeInfoWithStorage[172.18.0.4:9866,DS-f6d94b4e-924d-4ee3-b267-9d97d0ce765f,DISK], DatanodeInfoWithStorage[172.18.0.8:9866,DS-a90cfd2f-c197-4646-83b5-c93ad18c1d8c,DISK]]
+
+/curated/mitma/viajes/fecha=2022-10-27 <dir>
+/curated/mitma/viajes/fecha=2022-10-27/part-00005-109d3b30-1668-478f-9005-a985d74f59a0.c000.snappy.parquet 147223375 bytes, replicated: replication=3, 2 block(s):  Under replicated BP-477654162-172.18.0.2-1792498840627:blk_1073741901_1077. Target Replicas is 3 but found 2 live replica(s), 0 decommissioned replica(s), 0 decommissioning replica(s).
+ Under replicated BP-477654162-172.18.0.2-1792498840627:blk_1073741902_1078. Target Replicas is 3 but found 2 live replica(s), 0 decommissioned replica(s), 0 decommissioning replica(s).
+0. BP-477654162-172.18.0.2-1792498840627:blk_1073741901_1077 len=134217728 Live_repl=2  [DatanodeInfoWithStorage[172.18.0.4:9866,DS-f6d94b4e-924d-4ee3-b267-9d97d0ce765f,DISK], DatanodeInfoWithStorage[172.18.0.8:9866,DS-a90cfd2f-c197-4646-83b5-c93ad18c1d8c,DISK]]
+1. BP-477654162-172.18.0.2-1792498840627:blk_1073741902_1078 len=13005647 Live_repl=2  [DatanodeInfoWithStorage[172.18.0.4:9866,DS-f6d94b4e-924d-4ee3-b267-9d97d0ce765f,DISK], DatanodeInfoWithStorage[172.18.0.8:9866,DS-a90cfd2f-c197-4646-83b5-c93ad18c1d8c,DISK]]
+
+/curated/mitma/viajes/fecha=2022-10-28 <dir>
+/curated/mitma/viajes/fecha=2022-10-28/part-00000-109d3b30-1668-478f-9005-a985d74f59a0.c000.snappy.parquet 153137230 bytes, replicated: replication=3, 2 block(s):  Under replicated BP-477654162-172.18.0.2-1792498840627:blk_1073741894_1070. Target Replicas is 3 but found 2 live replica(s), 0 decommissioned replica(s), 0 decommissioning replica(s).
+ Under replicated BP-477654162-172.18.0.2-1792498840627:blk_1073741899_1075. Target Replicas is 3 but found 2 live replica(s), 0 decommissioned replica(s), 0 decommissioning replica(s).
+0. BP-477654162-172.18.0.2-1792498840627:blk_1073741894_1070 len=134217728 Live_repl=2  [DatanodeInfoWithStorage[172.18.0.4:9866,DS-f6d94b4e-924d-4ee3-b267-9d97d0ce765f,DISK], DatanodeInfoWithStorage[172.18.0.8:9866,DS-a90cfd2f-c197-4646-83b5-c93ad18c1d8c,DISK]]
+1. BP-477654162-172.18.0.2-1792498840627:blk_1073741899_1075 len=18919502 Live_repl=2  [DatanodeInfoWithStorage[172.18.0.8:9866,DS-a90cfd2f-c197-4646-83b5-c93ad18c1d8c,DISK], DatanodeInfoWithStorage[172.18.0.4:9866,DS-f6d94b4e-924d-4ee3-b267-9d97d0ce765f,DISK]]
+
+/curated/mitma/viajes/fecha=2022-10-29 <dir>
+/curated/mitma/viajes/fecha=2022-10-29/part-00004-109d3b30-1668-478f-9005-a985d74f59a0.c000.snappy.parquet 140730172 bytes, replicated: replication=3, 2 block(s):  Under replicated BP-477654162-172.18.0.2-1792498840627:blk_1073741903_1079. Target Replicas is 3 but found 2 live replica(s), 0 decommissioned replica(s), 0 decommissioning replica(s).
+ Under replicated BP-477654162-172.18.0.2-1792498840627:blk_1073741904_1080. Target Replicas is 3 but found 2 live replica(s), 0 decommissioned replica(s), 0 decommissioning replica(s).
+0. BP-477654162-172.18.0.2-1792498840627:blk_1073741903_1079 len=134217728 Live_repl=2  [DatanodeInfoWithStorage[172.18.0.8:9866,DS-a90cfd2f-c197-4646-83b5-c93ad18c1d8c,DISK], DatanodeInfoWithStorage[172.18.0.4:9866,DS-f6d94b4e-924d-4ee3-b267-9d97d0ce765f,DISK]]
+1. BP-477654162-172.18.0.2-1792498840627:blk_1073741904_1080 len=6512444 Live_repl=2  [DatanodeInfoWithStorage[172.18.0.8:9866,DS-a90cfd2f-c197-4646-83b5-c93ad18c1d8c,DISK], DatanodeInfoWithStorage[172.18.0.4:9866,DS-f6d94b4e-924d-4ee3-b267-9d97d0ce765f,DISK]]
+
+/curated/mitma/viajes/fecha=2022-10-30 <dir>
+/curated/mitma/viajes/fecha=2022-10-30/part-00001-109d3b30-1668-478f-9005-a985d74f59a0.c000.snappy.parquet 137411806 bytes, replicated: replication=3, 2 block(s):  Under replicated BP-477654162-172.18.0.2-1792498840627:blk_1073741893_1069. Target Replicas is 3 but found 2 live replica(s), 0 decommissioned replica(s), 0 decommissioning replica(s).
+ Under replicated BP-477654162-172.18.0.2-1792498840627:blk_1073741896_1072. Target Replicas is 3 but found 2 live replica(s), 0 decommissioned replica(s), 0 decommissioning replica(s).
+0. BP-477654162-172.18.0.2-1792498840627:blk_1073741893_1069 len=134217728 Live_repl=2  [DatanodeInfoWithStorage[172.18.0.8:9866,DS-a90cfd2f-c197-4646-83b5-c93ad18c1d8c,DISK], DatanodeInfoWithStorage[172.18.0.4:9866,DS-f6d94b4e-924d-4ee3-b267-9d97d0ce765f,DISK]]
+1. BP-477654162-172.18.0.2-1792498840627:blk_1073741896_1072 len=3194078 Live_repl=2  [DatanodeInfoWithStorage[172.18.0.4:9866,DS-f6d94b4e-924d-4ee3-b267-9d97d0ce765f,DISK], DatanodeInfoWithStorage[172.18.0.8:9866,DS-a90cfd2f-c197-4646-83b5-c93ad18c1d8c,DISK]]
+
+/curated/mitma/viajes/fecha=2022-10-31 <dir>
+/curated/mitma/viajes/fecha=2022-10-31/part-00003-109d3b30-1668-478f-9005-a985d74f59a0.c000.snappy.parquet 143189022 bytes, replicated: replication=3, 2 block(s):  Under replicated BP-477654162-172.18.0.2-1792498840627:blk_1073741895_1071. Target Replicas is 3 but found 2 live replica(s), 0 decommissioned replica(s), 0 decommissioning replica(s).
+ Under replicated BP-477654162-172.18.0.2-1792498840627:blk_1073741898_1074. Target Replicas is 3 but found 2 live replica(s), 0 decommissioned replica(s), 0 decommissioning replica(s).
+0. BP-477654162-172.18.0.2-1792498840627:blk_1073741895_1071 len=134217728 Live_repl=2  [DatanodeInfoWithStorage[172.18.0.4:9866,DS-f6d94b4e-924d-4ee3-b267-9d97d0ce765f,DISK], DatanodeInfoWithStorage[172.18.0.8:9866,DS-a90cfd2f-c197-4646-83b5-c93ad18c1d8c,DISK]]
+1. BP-477654162-172.18.0.2-1792498840627:blk_1073741898_1074 len=8971294 Live_repl=2  [DatanodeInfoWithStorage[172.18.0.4:9866,DS-f6d94b4e-924d-4ee3-b267-9d97d0ce765f,DISK], DatanodeInfoWithStorage[172.18.0.8:9866,DS-a90cfd2f-c197-4646-83b5-c93ad18c1d8c,DISK]]
+
+/curated/mitma/viajes/fecha=2022-11-01 <dir>
+/curated/mitma/viajes/fecha=2022-11-01/part-00004-109d3b30-1668-478f-9005-a985d74f59a0.c000.snappy.parquet 124244269 bytes, replicated: replication=3, 1 block(s):  Under replicated BP-477654162-172.18.0.2-1792498840627:blk_1073741905_1081. Target Replicas is 3 but found 2 live replica(s), 0 decommissioned replica(s), 0 decommissioning replica(s).
+0. BP-477654162-172.18.0.2-1792498840627:blk_1073741905_1081 len=124244269 Live_repl=2  [DatanodeInfoWithStorage[172.18.0.4:9866,DS-f6d94b4e-924d-4ee3-b267-9d97d0ce765f,DISK], DatanodeInfoWithStorage[172.18.0.8:9866,DS-a90cfd2f-c197-4646-83b5-c93ad18c1d8c,DISK]]
+
+
+Status: HEALTHY
+ Number of data-nodes:	2
+ Number of racks:		1
+ Total dirs:			8
+ Total symlinks:		0
+
+Replicated Blocks:
+ Total size:	991785883 B
+ Total files:	7
+ Total blocks (validated):	13 (avg. block size 76291221 B)
+ Minimally replicated blocks:	13 (100.0 %)
+ Over-replicated blocks:	0 (0.0 %)
+ Under-replicated blocks:	13 (100.0 %)
+ Mis-replicated blocks:		0 (0.0 %)
+ Default replication factor:	2
+ Average block replication:	2.0
+ Missing blocks:		0
+ Corrupt blocks:		0
+ Missing replicas:		13 (33.333332 %)
+
+Erasure Coded Block Groups:
+ Total size:	0 B
+ Total files:	0
+ Total block groups (validated):	0
+ Minimally erasure-coded block groups:	0
+ Over-erasure-coded block groups:	0
+ Under-erasure-coded block groups:	0
+ Unsatisfactory placement block groups:	0
+ Average block group size:	0.0
+ Missing block groups:		0
+ Corrupt block groups:		0
+ Missing internal blocks:	0
+FSCK ended at Tue Oct 20 13:21:00 UTC 2026 in 10 milliseconds
+
+
+The filesystem under path '/curated/mitma/viajes' is HEALTHY

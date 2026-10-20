@@ -1,0 +1,8 @@
+fecha,dia_semana,tipo_dia,observacion
+2022-10-26,miércoles,laborable,
+2022-10-27,jueves,laborable,
+2022-10-28,viernes,laborable,
+2022-10-29,sábado,fin_de_semana,
+2022-10-30,domingo,fin_de_semana,
+2022-10-31,lunes,laborable,víspera de festivo (puente en algunos sectores)
+2022-11-01,martes,festivo,Todos los Santos (festivo nacional)

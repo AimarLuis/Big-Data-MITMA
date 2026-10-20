@@ -1,0 +1,11 @@
+# Datos pesados: no van al repositorio (los descarga scripts/download_mitma.py)
+data/
+# Python / Jupyter / Spark
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+spark-warehouse/
+metastore_db/
+derby.log
+# Entorno local
+.env

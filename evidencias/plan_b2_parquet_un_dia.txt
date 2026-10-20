@@ -1,0 +1,43 @@
+== Physical Plan ==
+AdaptiveSparkPlan (6)
++- HashAggregate (5)
+   +- Exchange (4)
+      +- HashAggregate (3)
+         +- Project (2)
+            +- Scan parquet  (1)
+
+
+(1) Scan parquet 
+Output [3]: [origen#309, viajes#320, fecha#326]
+Batched: true
+Location: InMemoryFileIndex [hdfs://namenode:9000/curated/mitma/viajes]
+PartitionFilters: [isnotnull(fecha#326), (fecha#326 = 2022-10-26)]
+ReadSchema: struct<origen:string,viajes:double>
+
+(2) Project
+Output [2]: [origen#309, viajes#320]
+Input [3]: [origen#309, viajes#320, fecha#326]
+
+(3) HashAggregate
+Input [2]: [origen#309, viajes#320]
+Keys [1]: [origen#309]
+Functions [1]: [partial_sum(viajes#320)]
+Aggregate Attributes [1]: [sum#678]
+Results [2]: [origen#309, sum#679]
+
+(4) Exchange
+Input [2]: [origen#309, sum#679]
+Arguments: hashpartitioning(origen#309, 32), ENSURE_REQUIREMENTS, [plan_id=1449]
+
+(5) HashAggregate
+Input [2]: [origen#309, sum#679]
+Keys [1]: [origen#309]
+Functions [1]: [sum(viajes#320)]
+Aggregate Attributes [1]: [sum(viajes#320)#677]
+Results [2]: [origen#309, sum(viajes#320)#677 AS viajes#657]
+
+(6) AdaptiveSparkPlan
+Output [2]: [origen#309, viajes#657]
+Arguments: isFinalPlan=false
+
+

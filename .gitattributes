@@ -1,0 +1,9 @@
+# Los scripts se ejecutan dentro de contenedores Linux: siempre con saltos de línea LF.
+# Con CRLF (Windows), bash falla con "$'\r': command not found".
+*.sh   text eol=lf
+*.py   text eol=lf
+*.env  text eol=lf
+*.csv  text eol=lf
+Dockerfile text eol=lf
+*.ps1  text eol=crlf
+*.cmd  text eol=crlf

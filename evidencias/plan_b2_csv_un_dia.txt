@@ -1,0 +1,47 @@
+== Physical Plan ==
+AdaptiveSparkPlan (7)
++- HashAggregate (6)
+   +- Exchange (5)
+      +- HashAggregate (4)
+         +- Project (3)
+            +- Filter (2)
+               +- Scan csv  (1)
+
+
+(1) Scan csv 
+Output [3]: [fecha#291, origen#293, viajes#304]
+Batched: false
+Location: InMemoryFileIndex [hdfs://namenode:9000/raw/mitma/viajes]
+ReadSchema: struct<fecha:string,origen:string,viajes:double>
+
+(2) Filter
+Input [3]: [fecha#291, origen#293, viajes#304]
+Condition : ((gettimestamp(fecha#291, yyyyMMdd, TimestampType, try_to_date, Some(Etc/UTC), false) >= 2022-10-26 00:00:00) AND (gettimestamp(fecha#291, yyyyMMdd, TimestampType, try_to_date, Some(Etc/UTC), false) < 2022-10-27 00:00:00))
+
+(3) Project
+Output [2]: [origen#293, viajes#304]
+Input [3]: [fecha#291, origen#293, viajes#304]
+
+(4) HashAggregate
+Input [2]: [origen#293, viajes#304]
+Keys [1]: [origen#293]
+Functions [1]: [partial_sum(viajes#304)]
+Aggregate Attributes [1]: [sum#697]
+Results [2]: [origen#293, sum#698]
+
+(5) Exchange
+Input [2]: [origen#293, sum#698]
+Arguments: hashpartitioning(origen#293, 32), ENSURE_REQUIREMENTS, [plan_id=1466]
+
+(6) HashAggregate
+Input [2]: [origen#293, sum#698]
+Keys [1]: [origen#293]
+Functions [1]: [sum(viajes#304)]
+Aggregate Attributes [1]: [sum(viajes#304)#696]
+Results [2]: [origen#293, sum(viajes#304)#696 AS viajes#680]
+
+(7) AdaptiveSparkPlan
+Output [2]: [origen#293, viajes#680]
+Arguments: isFinalPlan=false
+
+
